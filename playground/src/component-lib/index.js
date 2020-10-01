@@ -135,7 +135,7 @@ var removeWhitespaces = function (src, replaceChar) {
 
 var StreamContainer = styled.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  background-color: ", ";\n  height: 100vh;\n  width: 100vw;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n"], ["\n  background-color: ", ";\n  height: 100vh;\n  width: 100vw;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n"])), theme.colors.gray700);
 function StreamMedico(_a) {
-    var medico = _a.medico, onSubscribe = _a.onSubscribe, onSubscribeError = _a.onSubscribeError, onVideoEnabled = _a.onVideoEnabled, onVideoDisabled = _a.onVideoDisabled;
+    var nomeSubscriber = _a.nomeSubscriber, onSubscribe = _a.onSubscribe, onSubscribeError = _a.onSubscribeError, onVideoEnabled = _a.onVideoEnabled, onVideoDisabled = _a.onVideoDisabled;
     var subscriberEventHandlers = {
         videoEnabled: function (event) {
             onVideoEnabled && onVideoEnabled(event);
@@ -147,7 +147,7 @@ function StreamMedico(_a) {
     var Wrapper = OTSubscriber;
     return (React.createElement(StreamContainer, { id: "stream-medico" },
         React.createElement(OTStreams, null,
-            React.createElement(Wrapper, { retry: true, maxRetryAttempts: 3, retryAttemptTimeout: 2000, properties: { width: '100vw', height: '100vh', name: medico }, 
+            React.createElement(Wrapper, { retry: true, maxRetryAttempts: 3, retryAttemptTimeout: 2000, properties: { width: '100vw', height: '100vh', name: nomeSubscriber }, 
                 // properties={{ width: '100vw', height: '100vh' }}
                 onSubscribe: onSubscribe, onError: onSubscribeError, eventHandlers: subscriberEventHandlers }))));
 }
@@ -183,7 +183,7 @@ var ContainerCameraPaciente = styled.div(templateObject_2$1 || (templateObject_2
 }, theme.breakpoints.md);
 var NoDevice = styled.div(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  flex: 1;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"], ["\n  flex: 1;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"])));
 function StreamPaciente(_a) {
-    var paciente = _a.paciente, _b = _a.noDevice, noDevice = _b === void 0 ? false : _b, videoSource = _a.videoSource, sharingScreen = _a.sharingScreen, _c = _a.videoEnabled, videoEnabled = _c === void 0 ? true : _c, onToggleVideo = _a.onToggleVideo, _d = _a.audioEnabled, audioEnabled = _d === void 0 ? true : _d, onToggleAudio = _a.onToggleAudio, onPublish = _a.onPublish, onError = _a.onError, onAccessDenied = _a.onAccessDenied, onStreamCreated = _a.onStreamCreated, onStreamDestroyed = _a.onStreamDestroyed;
+    var nomePublisher = _a.nomePublisher, _b = _a.noDevice, noDevice = _b === void 0 ? false : _b, videoSource = _a.videoSource, sharingScreen = _a.sharingScreen, _c = _a.videoEnabled, videoEnabled = _c === void 0 ? true : _c, onToggleVideo = _a.onToggleVideo, _d = _a.audioEnabled, audioEnabled = _d === void 0 ? true : _d, onToggleAudio = _a.onToggleAudio, onPublish = _a.onPublish, onError = _a.onError, onAccessDenied = _a.onAccessDenied, onStreamCreated = _a.onStreamCreated, onStreamDestroyed = _a.onStreamDestroyed;
     var publisherEventHandlers = {
         accessDenied: function (event) {
             onAccessDenied && onAccessDenied(event);
@@ -201,7 +201,7 @@ function StreamPaciente(_a) {
             ? {
                 publishVideo: videoEnabled,
                 publishAudio: audioEnabled,
-                name: paciente,
+                name: nomePublisher,
                 width: '180px',
                 height: '145px',
                 showControls: false,
@@ -210,7 +210,7 @@ function StreamPaciente(_a) {
             : {
                 publishVideo: videoEnabled,
                 publishAudio: audioEnabled,
-                name: paciente,
+                name: nomePublisher,
                 width: '180px',
                 height: '145px',
                 showControls: false,
@@ -296,9 +296,10 @@ var templateObject_1$4;
 var BarraOpcoesContainer = styled.div(templateObject_1$5 || (templateObject_1$5 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100vw;\n  height: 75px;\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  padding-left: 15px;\n  @media screen and (min-width: ", ") {\n    justify-content: center;\n    align-items: center;\n  }\n"], ["\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100vw;\n  height: 75px;\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  padding-left: 15px;\n  @media screen and (min-width: ", ") {\n    justify-content: center;\n    align-items: center;\n  }\n"])), theme.breakpoints.lg);
 var OpcoesContainer = styled.div(templateObject_2$3 || (templateObject_2$3 = __makeTemplateObject(["\n  display: flex;\n  width: 150px;\n  justify-content: space-around;\n  align-items: center;\n  @media screen and (min-width: ", ") {\n    width: 250px;\n  }\n"], ["\n  display: flex;\n  width: 150px;\n  justify-content: space-around;\n  align-items: center;\n  @media screen and (min-width: ", ") {\n    width: 250px;\n  }\n"])), theme.breakpoints.lg);
 function BarraOpcoes(_a) {
-    var chatOpen = _a.chatOpen, onToggleChat = _a.onToggleChat, sharingScreen = _a.sharingScreen, onToggleScreenSharing = _a.onToggleScreenSharing, onEndCall = _a.onEndCall, _b = _a.isScreenSharingEnabled, isScreenSharingEnabled = _b === void 0 ? false : _b, disabled = _a.disabled;
+    var chatOpen = _a.chatOpen, onToggleChat = _a.onToggleChat, onClickPictureInPicture = _a.onClickPictureInPicture, sharingScreen = _a.sharingScreen, onToggleScreenSharing = _a.onToggleScreenSharing, onEndCall = _a.onEndCall, _b = _a.isScreenSharingEnabled, isScreenSharingEnabled = _b === void 0 ? false : _b, _c = _a.isPictureInPictureEnabled, isPictureInPictureEnabled = _c === void 0 ? false : _c, disabled = _a.disabled;
     return (React.createElement(BarraOpcoesContainer, null,
         React.createElement(OpcoesContainer, null,
+            isPictureInPictureEnabled && (React.createElement(RoundedIcon, { icon: "fas fa-compress-alt", onClick: onClickPictureInPicture, title: 'Minimizar vídeo' })),
             React.createElement(RoundedIcon, { invertedBg: theme.colors.blue300, inverted: chatOpen, icon: "far fa-comments", onClick: onToggleChat, title: chatOpen ? 'Fechar chat' : 'Abrir chat' }),
             React.createElement(RoundedIcon, { invertedBg: theme.colors.blue300, inverted: false, icon: "fas fa-phone-slash", bg: theme.colors.unknown_red, onClick: onEndCall, title: "Finalizar chamada" }),
             isScreenSharingEnabled && (React.createElement(RoundedIcon, { invertedBg: theme.colors.blue300, inverted: sharingScreen, icon: "fas fa-desktop", onClick: onToggleScreenSharing, title: sharingScreen
@@ -327,29 +328,30 @@ var CustomCard = styled(Card)({
 });
 var CustomSpan = styled.span(templateObject_2$4 || (templateObject_2$4 = __makeTemplateObject(["\n  text-align: center;\n"], ["\n  text-align: center;\n"])));
 function CardErro(_a) {
-    var children = _a.children, onClickVolar = _a.onClickVolar;
+    var children = _a.children, onClickVoltar = _a.onClickVoltar;
     return (React.createElement(ContainerSemChamadas, null,
         React.createElement(CustomCard, null,
             React.createElement(CardText, null,
                 React.createElement(CustomSpan, { className: "h3" }, children)),
-            React.createElement(Button, { color: "primary", outline: true, type: "button", onClick: onClickVolar }, "Voltar para o in\u00EDcio"))));
+            React.createElement(Button, { color: "primary", outline: true, type: "button", onClick: onClickVoltar }, "Voltar para o in\u00EDcio"))));
 }
 var templateObject_1$6, templateObject_2$4;
 
 var ContainerTelemedicina = styled.div(templateObject_1$7 || (templateObject_1$7 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"], ["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"])), theme.colors.gray50);
 var VideoSession = function (_a) {
-    var chamadaEmAndamento = _a.chamadaEmAndamento, recusouTermo = _a.recusouTermo, onSessionEnded = _a.onSessionEnded, getTokboxApiKey = _a.getTokboxApiKey, currentUserName = _a.currentUserName, appLog = _a.appLog;
+    var _b = _a.isPictureInPictureEnabled, isPictureInPictureEnabled = _b === void 0 ? false : _b, _c = _a.publisherType, publisherType = _c === void 0 ? 'paciente' : _c, chamadaEmAndamento = _a.chamadaEmAndamento, recusouTermo = _a.recusouTermo, onSessionEnded = _a.onSessionEnded, getTokboxApiKey = _a.getTokboxApiKey, currentUserName = _a.currentUserName, appLog = _a.appLog, onClickVoltar = _a.onClickVoltar, termoObrigatorio = _a.termoObrigatorio;
     var sessionRef = useRef();
-    var _b = useState(), sessionStatus = _b[0], setSessionStatus = _b[1];
-    var _c = useState(''), mensagemErro = _c[0], setMensagemErro = _c[1];
-    var _d = useState(false), mostrarConfirmacaoFinalizacao = _d[0], setMostrarConfirmacaoFinalizacao = _d[1];
-    var _e = useState(true), videoPaciente = _e[0], setVideoPaciente = _e[1];
-    var _f = useState(videoSources.CAMERA), videoSource = _f[0], setVideoSource = _f[1];
-    var _g = useState(false), medicoConectado = _g[0], setMedicoConectado = _g[1];
-    var _h = useState(false), noDevice = _h[0], setNoDevice = _h[1];
-    var _j = useState(true), audioPaciente = _j[0], setAudioPaciente = _j[1];
-    var _k = useState([]), messages = _k[0], setMessages = _k[1];
-    var _l = useState(false), chatOpen = _l[0], setChatOpen = _l[1];
+    var _d = useState(), sessionStatus = _d[0], setSessionStatus = _d[1];
+    var _e = useState(''), mensagemErro = _e[0], setMensagemErro = _e[1];
+    var _f = useState(false), mostrarConfirmacaoFinalizacao = _f[0], setMostrarConfirmacaoFinalizacao = _f[1];
+    var _g = useState(true), videoPaciente = _g[0], setVideoPaciente = _g[1];
+    var _h = useState(videoSources.CAMERA), videoSource = _h[0], setVideoSource = _h[1];
+    var _j = useState(false), medicoConectado = _j[0], setMedicoConectado = _j[1];
+    var _k = useState(false), noDevice = _k[0], setNoDevice = _k[1];
+    var _l = useState(true), audioPaciente = _l[0], setAudioPaciente = _l[1];
+    var _m = useState([]), messages = _m[0], setMessages = _m[1];
+    var _o = useState(false), chatOpen = _o[0], setChatOpen = _o[1];
+    var _p = useState(false), pictureInPictureEnabled = _p[0], setPictureInPictureEnabled = _p[1];
     var onError = function (err) {
         appLog && appLog('<OTSession /> onError ', err);
         /* envia erros ao sentry */
@@ -372,6 +374,9 @@ var VideoSession = function (_a) {
     var onToggleChat = function () {
         setChatOpen(function (val) { return !val; });
     };
+    var publisherIsPaciente = function () {
+        return publisherType === 'paciente';
+    };
     var onSendMessage = function (msg) {
         var _a;
         (_a = sessionRef.current) === null || _a === void 0 ? void 0 : _a.sessionHelper.session.signal({
@@ -379,7 +384,7 @@ var VideoSession = function (_a) {
             data: JSON.stringify({
                 text: msg,
                 sender: {
-                    alias: getPrimeiroNome(currentUserName),
+                    alias: getPrimeiroNome(publisherIsPaciente() ? currentUserName : chamadaEmAndamento.nomeMedico),
                 },
                 sentOn: new Date().getTime(),
             }),
@@ -401,6 +406,12 @@ var VideoSession = function (_a) {
     };
     var onMostrarConfirmacaoFinalizacao = function () {
         setMostrarConfirmacaoFinalizacao(true);
+    };
+    var subscriberNameResolver = function () {
+        if (publisherIsPaciente()) {
+            return "Dr(a). " + getPrimeiroNome(chamadaEmAndamento.nomeMedico);
+        }
+        return 'Paciente';
     };
     var sessionEventHandlers = {
         connectionDestroyed: function (event) {
@@ -463,7 +474,7 @@ var VideoSession = function (_a) {
                     ? { me: true, label: 'Eu', text: eventData.text }
                     : {
                         me: false,
-                        label: "Dr(a). " + getPrimeiroNome(chamadaEmAndamento.nomeMedico),
+                        label: subscriberNameResolver(),
                         text: eventData.text,
                     };
                 setMessages(function (m) { return __spreadArrays(m, [newMessage_1]); });
@@ -499,13 +510,13 @@ var VideoSession = function (_a) {
         },
     };
     useEffect(function () {
-        if (sessionStatus === CONNECTION_DESTROYED && !recusouTermo) {
+        if (sessionStatus === CONNECTION_DESTROYED && (termoObrigatorio && !recusouTermo)) {
             setMensagemErro('Chamada finalizada');
         }
     }, [sessionStatus]);
     useEffect(function () {
         var _a;
-        if (recusouTermo) {
+        if (termoObrigatorio && recusouTermo) {
             appLog && appLog('Finalizando chamada de telemedicina');
             (_a = sessionRef.current) === null || _a === void 0 ? void 0 : _a.sessionHelper.session.disconnect(chamadaEmAndamento.codigoSessao);
             appLog && appLog('Chamada finalizada com sucesso');
@@ -513,22 +524,64 @@ var VideoSession = function (_a) {
         }
     }, [recusouTermo]);
     if (mensagemErro) {
-        return React.createElement(CardErro, null, mensagemErro);
+        return React.createElement(CardErro, { onClickVoltar: onClickVoltar }, mensagemErro);
     }
     if (!chamadaEmAndamento) {
-        return React.createElement(CardErro, null, "Nenhuma chamada em andamento");
+        return React.createElement(CardErro, { onClickVoltar: onClickVoltar }, "Nenhuma chamada em andamento");
     }
+    var aceitouTemoObrigatorio = function () {
+        if (termoObrigatorio) {
+            if (!chamadaEmAndamento.aceitouTermoComparecimento)
+                return false;
+            return true;
+        }
+        else {
+            return true;
+        }
+    };
+    var videoPacienteEnabled = function () {
+        if (videoPaciente) {
+            aceitouTemoObrigatorio();
+        }
+        else {
+            return false;
+        }
+    };
+    var audioPacienteEnabled = function () {
+        if (audioPaciente) {
+            aceitouTemoObrigatorio();
+        }
+        else {
+            return false;
+        }
+    };
+    var pictureInpictureRequest = function () {
+        var subscriberVideo = document.querySelector('.OTSubscriberContainer video.OT_video-element');
+        if (subscriberVideo) {
+            subscriberVideo
+                .requestPictureInPicture()
+                .then(function (res) {
+                setPictureInPictureEnabled(true);
+                subscriberVideo.addEventListener('leavepictureinpicture', function () {
+                    setPictureInPictureEnabled(false);
+                });
+            })
+                .catch(function (error) {
+                console.log('Request picture-in-picture failed');
+            });
+        }
+    };
     var Wrapper = OTSession;
     return (React.createElement(React.Fragment, null,
         React.createElement(ConfirmationModal, { title: "Finalizar", isOpen: mostrarConfirmacaoFinalizacao, onCancelar: function () {
                 setMostrarConfirmacaoFinalizacao(false);
             }, onConfirmar: onEndCall, toggleModal: function () { return null; } }, "Deseja realmente finalizar a chamada?"),
         React.createElement(ContainerTelemedicina, null,
-            React.createElement(Wrapper, { ref: sessionRef, apiKey: getTokboxApiKey(), sessionId: chamadaEmAndamento.codigoSessao, token: chamadaEmAndamento.tokenPaciente, onError: onError, eventHandlers: sessionEventHandlers },
-                React.createElement(StreamMedico, __assign({}, streamMedicoHandlers, { medico: "Dr(a). " + getPrimeiroNome(chamadaEmAndamento.nomeMedico) })),
-                React.createElement(StreamPaciente, __assign({}, streamPacienteHandlers, { noDevice: noDevice, videoEnabled: videoPaciente && chamadaEmAndamento.aceitouTermoComparecimento, onToggleVideo: onToggleVideo, audioEnabled: audioPaciente && chamadaEmAndamento.aceitouTermoComparecimento, onToggleAudio: onToggleAudio, sharingScreen: videoSource === videoSources.SCREEN, paciente: getPrimeiroNome(currentUserName, 10), videoSource: videoSource })),
-                React.createElement(BarraOpcoes, { chatOpen: chatOpen, onToggleChat: onToggleChat, sharingScreen: videoSource === videoSources.SCREEN, onToggleScreenSharing: onToggleScreenSharing, onEndCall: onMostrarConfirmacaoFinalizacao, disabled: !chamadaEmAndamento.aceitouTermoComparecimento }),
-                React.createElement(Chat, { open: chatOpen, messages: messages, onMessage: onSendMessage, disabled: !medicoConectado || !chamadaEmAndamento.aceitouTermoComparecimento })))));
+            React.createElement(Wrapper, { ref: sessionRef, apiKey: getTokboxApiKey(), sessionId: chamadaEmAndamento.codigoSessao, token: publisherIsPaciente() ? chamadaEmAndamento.tokenPaciente : chamadaEmAndamento.tokenMedico, onError: onError, eventHandlers: sessionEventHandlers }, !pictureInPictureEnabled && (React.createElement(React.Fragment, null,
+                React.createElement(StreamMedico, __assign({}, streamMedicoHandlers, { nomeSubscriber: subscriberNameResolver() })),
+                React.createElement(StreamPaciente, __assign({}, streamPacienteHandlers, { noDevice: noDevice, videoEnabled: videoPacienteEnabled(), onToggleVideo: onToggleVideo, audioEnabled: audioPacienteEnabled(), onToggleAudio: onToggleAudio, sharingScreen: videoSource === videoSources.SCREEN, nomePublisher: getPrimeiroNome(currentUserName, 10), videoSource: videoSource })),
+                React.createElement(BarraOpcoes, { chatOpen: chatOpen, onToggleChat: onToggleChat, sharingScreen: videoSource === videoSources.SCREEN, onToggleScreenSharing: onToggleScreenSharing, onEndCall: onMostrarConfirmacaoFinalizacao, disabled: termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento, isPictureInPictureEnabled: isPictureInPictureEnabled, onClickPictureInPicture: pictureInpictureRequest }),
+                React.createElement(Chat, { open: chatOpen, messages: messages, onMessage: onSendMessage, disabled: !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento) })))))));
 };
 var templateObject_1$7;
 

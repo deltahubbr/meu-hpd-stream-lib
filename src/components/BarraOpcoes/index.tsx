@@ -35,15 +35,22 @@ const OpcoesContainer = styled.div`
 export default function BarraOpcoes({
   chatOpen,
   onToggleChat,
+  onClickPictureInPicture,
   sharingScreen,
   onToggleScreenSharing,
   onEndCall,
   isScreenSharingEnabled = false,
+  isPictureInPictureEnabled = false,
   disabled
 }: BarraOpcoesType) {
   return (
     <BarraOpcoesContainer>
       <OpcoesContainer>
+        {isPictureInPictureEnabled && (<RoundedIcon
+          icon="fas fa-compress-alt"
+          onClick={onClickPictureInPicture}
+          title={'Minimizar vídeo'}
+        />)}
         <RoundedIcon
           invertedBg={theme.colors.blue300}
           inverted={chatOpen}

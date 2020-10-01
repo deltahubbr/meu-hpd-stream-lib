@@ -1,4 +1,4 @@
 export interface CardErroType {
-    onClickVolar?: (event: React.MouseEvent<any, MouseEvent>) => void
+    onClickVoltar?: (event: React.MouseEvent<any, MouseEvent>) => void
     children?: React.ReactNode
 }

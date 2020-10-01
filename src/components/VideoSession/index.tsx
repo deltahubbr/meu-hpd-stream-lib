@@ -27,8 +27,8 @@ import { getPrimeiroNome } from '../../utils/strings';
 
 import { Message, VideoSessionType } from './types';
 
-import StreamMedico from '../StreamMedico';
-import StreamPaciente from '../StreamPaciente';
+import StreamSubscriber from '../StreamSubscriber';
+import StreamPublisher from '../StreamPublisher';
 import Chat from '../Chat';
 import BarraOpcoes from '../BarraOpcoes';
 import ConfirmationModal from '../ConfirmationModal';
@@ -41,9 +41,8 @@ const ContainerTelemedicina = styled.div`
 `;
 
 
-const VideoSession = ({ chamadaEmAndamento, recusouTermo, onSessionEnded, getTokboxApiKey, currentUserName, appLog } : VideoSessionType) => {
+const VideoSession = ({ isPictureInPictureEnabled = false, publisherType = 'paciente', chamadaEmAndamento, recusouTermo, onSessionEnded, getTokboxApiKey, currentUserName, appLog, onClickVoltar, termoObrigatorio } : VideoSessionType) => {
   const sessionRef = useRef<any>();
-
   const [sessionStatus, setSessionStatus] = useState<String | undefined>();
   const [mensagemErro, setMensagemErro] = useState('');
   const [
@@ -57,6 +56,7 @@ const VideoSession = ({ chamadaEmAndamento, recusouTermo, onSessionEnded, getTok
   const [audioPaciente, setAudioPaciente] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatOpen, setChatOpen] = useState(false);
+  const [pictureInPictureEnabled, setPictureInPictureEnabled] = useState(false);
 
   const onError = (err: Error) => {
     appLog && appLog('<OTSession /> onError ', err);
@@ -87,13 +87,17 @@ const VideoSession = ({ chamadaEmAndamento, recusouTermo, onSessionEnded, getTok
     setChatOpen((val) => !val);
   };
 
+  const publisherIsPaciente = () => {
+    return publisherType === 'paciente';
+  }
+
   const onSendMessage = (msg: String) => {
     sessionRef.current?.sessionHelper.session.signal({
       type: 'text-chat',
       data: JSON.stringify({
         text: msg,
         sender: {
-          alias: getPrimeiroNome(currentUserName),
+          alias: getPrimeiroNome(publisherIsPaciente() ? currentUserName : chamadaEmAndamento.nomeMedico),
         },
         sentOn: new Date().getTime(),
       }),
@@ -126,6 +130,13 @@ const VideoSession = ({ chamadaEmAndamento, recusouTermo, onSessionEnded, getTok
   const onMostrarConfirmacaoFinalizacao = () => {
     setMostrarConfirmacaoFinalizacao(true);
   };
+
+  const subscriberNameResolver = () => {
+    if (publisherIsPaciente()) {
+      return `Dr(a). ${getPrimeiroNome(chamadaEmAndamento.nomeMedico)}`
+    }
+    return 'Paciente'
+  }
 
   const sessionEventHandlers: SessionEventHandlers = {
     connectionDestroyed: (event: any) => {
@@ -213,11 +224,12 @@ const VideoSession = ({ chamadaEmAndamento, recusouTermo, onSessionEnded, getTok
         const myConnectionId =
           sessionRef.current?.sessionHelper.session.connection.connectionId;
         const itsMe = event?.from.connectionId === myConnectionId;
+        
         const newMessage = itsMe
           ? { me: true, label: 'Eu', text: eventData.text }
           : {
               me: false,
-              label: `Dr(a). ${getPrimeiroNome(chamadaEmAndamento.nomeMedico)}`,
+              label: subscriberNameResolver(),
               text: eventData.text,
             };
 
@@ -266,13 +278,13 @@ const VideoSession = ({ chamadaEmAndamento, recusouTermo, onSessionEnded, getTok
   };
 
   useEffect(() => {
-    if (sessionStatus === CONNECTION_DESTROYED && !recusouTermo) {
+    if (sessionStatus === CONNECTION_DESTROYED && (termoObrigatorio && !recusouTermo)) {
       setMensagemErro('Chamada finalizada');
     }
   }, [sessionStatus]);
 
   useEffect(() => {
-    if (recusouTermo) {
+    if (termoObrigatorio && recusouTermo) {
       appLog && appLog('Finalizando chamada de telemedicina');
 
       sessionRef.current?.sessionHelper.session.disconnect(
@@ -288,11 +300,53 @@ const VideoSession = ({ chamadaEmAndamento, recusouTermo, onSessionEnded, getTok
   }, [recusouTermo]);
 
   if (mensagemErro) {
-    return <CardErro>{mensagemErro}</CardErro>;
+    return <CardErro onClickVoltar={onClickVoltar}>{mensagemErro}</CardErro>;
   }
 
   if (!chamadaEmAndamento) {
-    return <CardErro>Nenhuma chamada em andamento</CardErro>;
+    return <CardErro onClickVoltar={onClickVoltar}>Nenhuma chamada em andamento</CardErro>;
+  }
+  const aceitouTemoObrigatorio = () => {
+    if (termoObrigatorio) {
+      if (!chamadaEmAndamento.aceitouTermoComparecimento) return false;
+      return true;
+    } else {
+      return true;
+    };
+  }
+
+  const videoPacienteEnabled = () => {
+    if (videoPaciente) {
+      aceitouTemoObrigatorio()
+    } else {
+      return false;
+    }
+  }
+  const audioPacienteEnabled = () => {
+    if (audioPaciente) {
+      aceitouTemoObrigatorio()
+    } else {
+      return false;
+    }
+  }
+
+  const pictureInpictureRequest = () => {
+    const subscriberVideo: any = document.querySelector('.OTSubscriberContainer video.OT_video-element');
+
+    if (subscriberVideo) {
+      subscriberVideo
+        .requestPictureInPicture()
+        .then((res) => {
+          setPictureInPictureEnabled(true);
+
+          subscriberVideo.addEventListener('leavepictureinpicture', () => {
+            setPictureInPictureEnabled(false);
+          });
+        })
+        .catch((error) => {
+          console.log('Request picture-in-picture failed');
+        });
+    }
   }
 
   const Wrapper: any = OTSessionWrapper;
@@ -314,45 +368,48 @@ const VideoSession = ({ chamadaEmAndamento, recusouTermo, onSessionEnded, getTok
           ref={sessionRef}
           apiKey={getTokboxApiKey()}
           sessionId={chamadaEmAndamento.codigoSessao}
-          token={chamadaEmAndamento.tokenPaciente}
+          token={publisherIsPaciente() ? chamadaEmAndamento.tokenPaciente : chamadaEmAndamento.tokenMedico}
           onError={onError}
           eventHandlers={sessionEventHandlers}
         >
-          <StreamMedico
-            {...streamMedicoHandlers}
-            medico={`Dr(a). ${getPrimeiroNome(chamadaEmAndamento.nomeMedico)}`}
-          />
-          <StreamPaciente
-            {...streamPacienteHandlers}
-            noDevice={noDevice}
-            videoEnabled={
-              videoPaciente && chamadaEmAndamento.aceitouTermoComparecimento
-            }
-            onToggleVideo={onToggleVideo}
-            audioEnabled={
-              audioPaciente && chamadaEmAndamento.aceitouTermoComparecimento
-            }
-            onToggleAudio={onToggleAudio}
-            sharingScreen={videoSource === videoSources.SCREEN}
-            paciente={getPrimeiroNome(currentUserName, 10)}
-            videoSource={videoSource}
-          />
-          <BarraOpcoes
-            chatOpen={chatOpen}
-            onToggleChat={onToggleChat}
-            sharingScreen={videoSource === videoSources.SCREEN}
-            onToggleScreenSharing={onToggleScreenSharing}
-            onEndCall={onMostrarConfirmacaoFinalizacao}
-            disabled={!chamadaEmAndamento.aceitouTermoComparecimento}
-          />
-          <Chat
-            open={chatOpen}
-            messages={messages}
-            onMessage={onSendMessage}
-            disabled={
-              !medicoConectado || !chamadaEmAndamento.aceitouTermoComparecimento
-            }
-          />
+        {!pictureInPictureEnabled && (
+          <>
+            <StreamSubscriber
+              {...streamMedicoHandlers}
+              nomeSubscriber={subscriberNameResolver()}
+            />
+          
+              <StreamPublisher
+                {...streamPacienteHandlers}
+                noDevice={noDevice}
+                videoEnabled={videoPacienteEnabled()}
+                onToggleVideo={onToggleVideo}
+                audioEnabled={audioPacienteEnabled()}
+                onToggleAudio={onToggleAudio}
+                sharingScreen={videoSource === videoSources.SCREEN}
+                nomePublisher={getPrimeiroNome(currentUserName, 10)}
+                videoSource={videoSource}
+              />
+              <BarraOpcoes
+                chatOpen={chatOpen}
+                onToggleChat={onToggleChat}
+                sharingScreen={videoSource === videoSources.SCREEN}
+                onToggleScreenSharing={onToggleScreenSharing}
+                onEndCall={onMostrarConfirmacaoFinalizacao}
+                disabled={termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento}
+                isPictureInPictureEnabled={isPictureInPictureEnabled}
+                onClickPictureInPicture={pictureInpictureRequest}
+              />
+              <Chat
+                open={chatOpen}
+                messages={messages}
+                onMessage={onSendMessage}
+                disabled={
+                  !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento)
+                }
+              />
+          </>
+          )}
         </Wrapper>
       </ContainerTelemedicina>
     </>

@@ -47,7 +47,7 @@ const NoDevice = styled.div`
 `;
 
 export default function StreamPaciente({
-  paciente,
+  nomePublisher,
 
   noDevice = false,
   videoSource,
@@ -83,7 +83,7 @@ export default function StreamPaciente({
         ? {
             publishVideo: videoEnabled,
             publishAudio: audioEnabled,
-            name: paciente,
+            name: nomePublisher,
             width: '180px',
             height: '145px',
             showControls: false,
@@ -92,7 +92,7 @@ export default function StreamPaciente({
         : {
             publishVideo: videoEnabled,
             publishAudio: audioEnabled,
-            name: paciente,
+            name: nomePublisher,
             width: '180px',
             height: '145px',
             showControls: false,

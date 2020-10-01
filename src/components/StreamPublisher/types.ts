@@ -1,7 +1,7 @@
 import { Error, Event, StreamCreatedEvent } from "opentok-react/types/opentok";
 
 export interface StreamPacienteType {
-    paciente?: string,
+    nomePublisher?: string,
     noDevice: boolean,
     videoSource: string,
     sharingScreen?: boolean,

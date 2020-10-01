@@ -20,7 +20,7 @@ const StreamContainer = styled.div`
 `;
 
 export default function StreamMedico({
-  medico,
+  nomeSubscriber,
   onSubscribe,
   onSubscribeError,
   onVideoEnabled,
@@ -43,7 +43,7 @@ export default function StreamMedico({
           retry
           maxRetryAttempts={3}
           retryAttemptTimeout={2000}
-          properties={{ width: '100vw', height: '100vh', name: medico }}
+          properties={{ width: '100vw', height: '100vh', name: nomeSubscriber }}
           // properties={{ width: '100vw', height: '100vh' }}
           onSubscribe={onSubscribe}
           onError={onSubscribeError}

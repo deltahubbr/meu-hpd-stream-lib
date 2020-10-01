@@ -24,7 +24,7 @@ const CustomSpan = styled.span`
   text-align: center;
 `;
 
-export default function CardErro({ children, onClickVolar }: CardErroType) {
+export default function CardErro({ children, onClickVoltar }: CardErroType) {
   return (
     <ContainerSemChamadas>
       <CustomCard>
@@ -35,7 +35,7 @@ export default function CardErro({ children, onClickVolar }: CardErroType) {
           color="primary"
           outline
           type="button"
-          onClick={onClickVolar}
+          onClick={onClickVoltar}
         >
           Voltar para o início
         </Button>
