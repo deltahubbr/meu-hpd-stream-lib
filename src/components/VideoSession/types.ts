@@ -7,23 +7,22 @@ export interface Message {
 export interface Chamada {
     idAtendimento: string,
     codigoSessao: string,
-    tokenPaciente: string,
-    tokenMedico: string,
-    nomeMedico: string,
-    status: string,
-    urlFotoMedico: string,
+    tokenPaciente?: string,
+    tokenMedico?: string,
+    subscriberName: string,
     aceitouTermoComparecimento?: boolean,
 }
 
 export interface VideoSessionType {
     publisherType: 'medico' | 'paciente',
     chamadaEmAndamento: Chamada,
-    recusouTermo: boolean,
+    recusouTermo?: boolean,
     termoObrigatorio: boolean,
     onSessionEnded: (codigoSessao: string) => void,
     getTokboxApiKey: () => string,
     currentUserName: string,
     appLog?: (msg: string, params?: string | Object) => void,
-    onClickVoltar?: (event: any) => void
-    isPictureInPictureEnabled?: boolean
+    onClickVoltar?: (event: any) => void,
+    isPictureInPictureEnabled?: boolean,
+    onTogglePictureInPicture?: (value: boolean) => void,
 }

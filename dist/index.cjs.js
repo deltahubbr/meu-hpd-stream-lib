@@ -345,7 +345,7 @@ var templateObject_1$6, templateObject_2$4;
 
 var ContainerTelemedicina = styled__default['default'].div(templateObject_1$7 || (templateObject_1$7 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"], ["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"])), theme.colors.gray50);
 var VideoSession = function (_a) {
-    var _b = _a.isPictureInPictureEnabled, isPictureInPictureEnabled = _b === void 0 ? false : _b, _c = _a.publisherType, publisherType = _c === void 0 ? 'paciente' : _c, chamadaEmAndamento = _a.chamadaEmAndamento, recusouTermo = _a.recusouTermo, onSessionEnded = _a.onSessionEnded, getTokboxApiKey = _a.getTokboxApiKey, currentUserName = _a.currentUserName, appLog = _a.appLog, onClickVoltar = _a.onClickVoltar, termoObrigatorio = _a.termoObrigatorio;
+    var onTogglePictureInPicture = _a.onTogglePictureInPicture, _b = _a.isPictureInPictureEnabled, isPictureInPictureEnabled = _b === void 0 ? false : _b, _c = _a.publisherType, publisherType = _c === void 0 ? 'paciente' : _c, chamadaEmAndamento = _a.chamadaEmAndamento, recusouTermo = _a.recusouTermo, onSessionEnded = _a.onSessionEnded, getTokboxApiKey = _a.getTokboxApiKey, currentUserName = _a.currentUserName, appLog = _a.appLog, onClickVoltar = _a.onClickVoltar, termoObrigatorio = _a.termoObrigatorio;
     var sessionRef = React.useRef();
     var _d = React.useState(), sessionStatus = _d[0], setSessionStatus = _d[1];
     var _e = React.useState(''), mensagemErro = _e[0], setMensagemErro = _e[1];
@@ -390,7 +390,7 @@ var VideoSession = function (_a) {
             data: JSON.stringify({
                 text: msg,
                 sender: {
-                    alias: getPrimeiroNome(publisherIsPaciente() ? currentUserName : chamadaEmAndamento.nomeMedico),
+                    alias: getPrimeiroNome(publisherIsPaciente() ? currentUserName : chamadaEmAndamento.subscriberName),
                 },
                 sentOn: new Date().getTime(),
             }),
@@ -415,9 +415,9 @@ var VideoSession = function (_a) {
     };
     var subscriberNameResolver = function () {
         if (publisherIsPaciente()) {
-            return "Dr(a). " + getPrimeiroNome(chamadaEmAndamento.nomeMedico);
+            return "Dr(a). " + getPrimeiroNome(chamadaEmAndamento.subscriberName);
         }
-        return 'Paciente';
+        return chamadaEmAndamento.subscriberName;
     };
     var sessionEventHandlers = {
         connectionDestroyed: function (event) {
@@ -568,8 +568,10 @@ var VideoSession = function (_a) {
                 .requestPictureInPicture()
                 .then(function (res) {
                 setPictureInPictureEnabled(true);
+                onTogglePictureInPicture && onTogglePictureInPicture(true);
                 subscriberVideo.addEventListener('leavepictureinpicture', function () {
                     setPictureInPictureEnabled(false);
+                    onTogglePictureInPicture && onTogglePictureInPicture(false);
                 });
             })
                 .catch(function (error) {

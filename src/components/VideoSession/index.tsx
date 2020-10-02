@@ -41,7 +41,7 @@ const ContainerTelemedicina = styled.div`
 `;
 
 
-const VideoSession = ({ isPictureInPictureEnabled = false, publisherType = 'paciente', chamadaEmAndamento, recusouTermo, onSessionEnded, getTokboxApiKey, currentUserName, appLog, onClickVoltar, termoObrigatorio } : VideoSessionType) => {
+const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = false, publisherType = 'paciente', chamadaEmAndamento, recusouTermo, onSessionEnded, getTokboxApiKey, currentUserName, appLog, onClickVoltar, termoObrigatorio } : VideoSessionType) => {
   const sessionRef = useRef<any>();
   const [sessionStatus, setSessionStatus] = useState<String | undefined>();
   const [mensagemErro, setMensagemErro] = useState('');
@@ -97,7 +97,7 @@ const VideoSession = ({ isPictureInPictureEnabled = false, publisherType = 'paci
       data: JSON.stringify({
         text: msg,
         sender: {
-          alias: getPrimeiroNome(publisherIsPaciente() ? currentUserName : chamadaEmAndamento.nomeMedico),
+          alias: getPrimeiroNome(publisherIsPaciente() ? currentUserName : chamadaEmAndamento.subscriberName),
         },
         sentOn: new Date().getTime(),
       }),
@@ -133,9 +133,9 @@ const VideoSession = ({ isPictureInPictureEnabled = false, publisherType = 'paci
 
   const subscriberNameResolver = () => {
     if (publisherIsPaciente()) {
-      return `Dr(a). ${getPrimeiroNome(chamadaEmAndamento.nomeMedico)}`
+      return `Dr(a). ${getPrimeiroNome(chamadaEmAndamento.subscriberName)}`
     }
-    return 'Paciente'
+    return chamadaEmAndamento.subscriberName;
   }
 
   const sessionEventHandlers: SessionEventHandlers = {
@@ -338,9 +338,10 @@ const VideoSession = ({ isPictureInPictureEnabled = false, publisherType = 'paci
         .requestPictureInPicture()
         .then((res) => {
           setPictureInPictureEnabled(true);
-
+          onTogglePictureInPicture && onTogglePictureInPicture(true);
           subscriberVideo.addEventListener('leavepictureinpicture', () => {
             setPictureInPictureEnabled(false);
+            onTogglePictureInPicture && onTogglePictureInPicture(false);
           });
         })
         .catch((error) => {
