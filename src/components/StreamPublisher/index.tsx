@@ -64,6 +64,7 @@ export default function StreamPaciente({
   onAccessDenied,
   onStreamCreated,
   onStreamDestroyed,
+  onMediaStopped,
 }: StreamPacienteType) {
   const publisherEventHandlers: PublisherEventHandlers = {
     accessDenied: (event) => {
@@ -74,6 +75,9 @@ export default function StreamPaciente({
     },
     streamDestroyed: ({ reason }) => {
       onStreamDestroyed && onStreamDestroyed(reason);
+    },
+    mediaStopped: (e) => {
+      onMediaStopped && onMediaStopped(e);
     },
   };
 

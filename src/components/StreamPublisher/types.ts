@@ -13,5 +13,6 @@ export interface StreamPacienteType {
     onError?: (error: Error) => void,
     onAccessDenied?: (event: Event<"accessDenied", unknown>) => void,
     onStreamCreated?: (event: StreamCreatedEvent) => void,
-    onStreamDestroyed?: (event: string) => void,
+    onStreamDestroyed?: (event: string) => void, 
+    onMediaStopped?: (event: string) => void, 
 }

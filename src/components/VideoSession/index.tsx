@@ -289,6 +289,14 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
         setVideoSource(videoSources.CAMERA);
       }
     },
+    onMediaStopped: (event) => {
+      const { stream } = event.target;
+
+      if (stream && stream.videoType === 'screen' && event.cancelable) {
+        event.preventDefault();
+        onToggleScreenSharing();
+      }
+    }
   };
 
   useEffect(() => {

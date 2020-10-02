@@ -61,7 +61,6 @@ var DISCONNECTED = 'disconnected';
 var RECONNECTED = 'reconnected';
 var RECONNECTING = 'reconnecting';
 var CONNECTION_DESTROYED = 'connectionDestroyed';
-var DEVICE_NOT_FOUND = 'OT_NO_DEVICES_FOUND';
 var AUTHENTICATION_ERROR = 'OT_AUTHENTICATION_ERROR';
 var SIGNAL_TYPE = 'signal:text-chat';
 var videoSources = {
@@ -103,9 +102,6 @@ var theme = {
     breakpoints: BREAKPOINT,
 };
 
-var isDeviceNotFound = function (err) {
-    return err.name === DEVICE_NOT_FOUND;
-};
 var isAuthError = function (err) {
     return err.name === AUTHENTICATION_ERROR;
 };
@@ -352,6 +348,7 @@ var VideoSession = function (_a) {
     var _m = useState([]), messages = _m[0], setMessages = _m[1];
     var _o = useState(false), chatOpen = _o[0], setChatOpen = _o[1];
     var _p = useState(false), pictureInPictureEnabled = _p[0], setPictureInPictureEnabled = _p[1];
+    var _q = useState(''), streamIdVideo = _q[0], setStreamIdVideo = _q[1];
     var onError = function (err) {
         appLog && appLog('<OTSession /> onError ', err);
         /* envia erros ao sentry */
@@ -397,7 +394,7 @@ var VideoSession = function (_a) {
         appLog && appLog('onToggleScreenSharing', screenSharingOption);
         setVideoSource(screenSharingOption);
     };
-    var onEndCall = function () {
+    var onEndCall = function (e) {
         var _a;
         appLog && appLog('Finalizando chamada de telemedicina');
         (_a = sessionRef.current) === null || _a === void 0 ? void 0 : _a.sessionHelper.session.disconnect(chamadaEmAndamento.codigoSessao);
@@ -414,6 +411,12 @@ var VideoSession = function (_a) {
         return chamadaEmAndamento.subscriberName;
     };
     var sessionEventHandlers = {
+        streamCreated: function (event) {
+            var _a = event.stream, streamId = _a.streamId, videoType = _a.videoType;
+            if (videoType === 'camera') {
+                setStreamIdVideo(streamId);
+            }
+        },
         connectionDestroyed: function (event) {
             /* quando o cliente remoto finaliza a sessão VOLUNTARIAMENTE */
             appLog && appLog('<OTSession /> connectionDestroyed', event);
@@ -507,15 +510,20 @@ var VideoSession = function (_a) {
         onError: function (err) {
             appLog && appLog("<OTPublisher /> onError", err);
             captureException(err);
-            if (isDeviceNotFound(err)) {
+        },
+        onAccessDenied: function (event) {
+            appLog && appLog("<OTPublisher /> onAccessDenied", event);
+            var streamId = event.target.streamId;
+            if (!streamId) {
                 setNoDevice(true);
                 setVideoPaciente(false);
+                setMensagemErro('Para iniciar a chamada de vídeo, é necessário permitir acesso à camera do dispositivo.');
             }
-        },
-        onAccessDenied: function () {
-            appLog && appLog("<OTPublisher /> onAccessDenied");
-            setMensagemErro('Para iniciar a chamada de vídeo, é necessário permitir acesso à camera do dispositivo.');
-            onEndCall();
+            if (streamId !== streamIdVideo && event.cancelable) {
+                event.preventDefault();
+                setStreamIdVideo('');
+                setVideoSource(videoSources.CAMERA);
+            }
         },
     };
     useEffect(function () {
@@ -527,7 +535,7 @@ var VideoSession = function (_a) {
         var _a;
         if (termoObrigatorio && recusouTermo) {
             appLog && appLog('Finalizando chamada de telemedicina');
-            (_a = sessionRef.current) === null || _a === void 0 ? void 0 : _a.sessionHelper.session.disconnect(chamadaEmAndamento.codigoSessao);
+            sessionRef.current && ((_a = sessionRef.current) === null || _a === void 0 ? void 0 : _a.sessionHelper.session.disconnect(chamadaEmAndamento.codigoSessao));
             appLog && appLog('Chamada finalizada com sucesso');
             setMensagemErro('Para iniciar a chamada, é preciso aceitar o termo de comparecimento');
         }
