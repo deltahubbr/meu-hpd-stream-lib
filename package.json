@@ -1,6 +1,6 @@
 {
   "name": "@deltahubbr/meu-hpd-stream-lib",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",

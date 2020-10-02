@@ -426,7 +426,10 @@ var VideoSession = function (_a) {
             appLog && appLog('<OTSession /> sessionConnected', event);
             var idConexaoOrigem = event.target.connection.connectionId;
             var idMinhaConexao = (_a = sessionRef.current) === null || _a === void 0 ? void 0 : _a.sessionHelper.session.connection.connectionId;
-            breadcrumb({ message: "cliente " + (idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto') + " conectou na sess\u00E3o", category: 'telemedicina' });
+            breadcrumb({
+                message: "cliente " + (idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto') + " conectou na sess\u00E3o",
+                category: 'telemedicina'
+            });
             appLog && appLog('Minha conexão? ', idConexaoOrigem === idMinhaConexao);
             setSessionStatus(CONNECTED);
         },
@@ -439,8 +442,11 @@ var VideoSession = function (_a) {
                 ? idConexaoOrigem
                 : (_a = sessionRef.current) === null || _a === void 0 ? void 0 : _a.sessionHelper.session.id;
             appLog && appLog('Minha conexão?', idConexaoOrigem === idMinhaConexao);
-            breadcrumb({ message: "cliente " + (idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto') + " desconectou da sess\u00E3o", category: 'telemedicina',
-                level: Severity.Warning });
+            breadcrumb({
+                message: "cliente " + (idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto') + " desconectou da sess\u00E3o",
+                category: 'telemedicina',
+                level: Severity.Warning
+            });
             if (idConexaoOrigem === idMinhaConexao) {
                 setSessionStatus(CONNECTION_DESTROYED);
             }
@@ -455,8 +461,11 @@ var VideoSession = function (_a) {
             var idMinhaConexao = sessionRef.current === null
                 ? idConexaoOrigem
                 : (_a = sessionRef.current) === null || _a === void 0 ? void 0 : _a.sessionHelper.session.id;
-            breadcrumb({ message: "cliente " + (idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto') + " reconectou na sess\u00E3o", category: 'telemedicina',
-                level: Severity.Warning });
+            breadcrumb({
+                message: "cliente " + (idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto') + " reconectou na sess\u00E3o",
+                category: 'telemedicina',
+                level: Severity.Warning
+            });
             setSessionStatus(RECONNECTED);
         },
         sessionReconnecting: function (event) {
@@ -579,11 +588,12 @@ var VideoSession = function (_a) {
                 setMostrarConfirmacaoFinalizacao(false);
             }, onConfirmar: onEndCall, toggleModal: function () { return null; } }, "Deseja realmente finalizar a chamada?"),
         React.createElement(ContainerTelemedicina, null,
-            React.createElement(Wrapper, { ref: sessionRef, apiKey: getTokboxApiKey(), sessionId: chamadaEmAndamento.codigoSessao, token: publisherIsPaciente() ? chamadaEmAndamento.tokenPaciente : chamadaEmAndamento.tokenMedico, onError: onError, eventHandlers: sessionEventHandlers }, !pictureInPictureEnabled && (React.createElement(React.Fragment, null,
-                React.createElement(StreamMedico, __assign({}, streamMedicoHandlers, { nomeSubscriber: subscriberNameResolver() })),
+            React.createElement(Wrapper, { ref: sessionRef, apiKey: getTokboxApiKey(), sessionId: chamadaEmAndamento.codigoSessao, token: publisherIsPaciente() ? chamadaEmAndamento.tokenPaciente : chamadaEmAndamento.tokenMedico, onError: onError, eventHandlers: sessionEventHandlers },
+                !pictureInPictureEnabled && (React.createElement(StreamMedico, __assign({}, streamMedicoHandlers, { nomeSubscriber: subscriberNameResolver() }))),
                 React.createElement(StreamPaciente, __assign({}, streamPacienteHandlers, { noDevice: noDevice, videoEnabled: videoPacienteEnabled(), onToggleVideo: onToggleVideo, audioEnabled: audioPacienteEnabled(), onToggleAudio: onToggleAudio, sharingScreen: videoSource === videoSources.SCREEN, nomePublisher: getPrimeiroNome(currentUserName, 10), videoSource: videoSource })),
-                React.createElement(BarraOpcoes, { chatOpen: chatOpen, onToggleChat: onToggleChat, sharingScreen: videoSource === videoSources.SCREEN, onToggleScreenSharing: onToggleScreenSharing, onEndCall: onMostrarConfirmacaoFinalizacao, disabled: termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento, isPictureInPictureEnabled: isPictureInPictureEnabled, onClickPictureInPicture: pictureInpictureRequest }),
-                React.createElement(Chat, { open: chatOpen, messages: messages, onMessage: onSendMessage, disabled: !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento) })))))));
+                !pictureInPictureEnabled && (React.createElement(React.Fragment, null,
+                    React.createElement(BarraOpcoes, { chatOpen: chatOpen, onToggleChat: onToggleChat, sharingScreen: videoSource === videoSources.SCREEN, onToggleScreenSharing: onToggleScreenSharing, onEndCall: onMostrarConfirmacaoFinalizacao, disabled: termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento, isPictureInPictureEnabled: isPictureInPictureEnabled, onClickPictureInPicture: pictureInpictureRequest }),
+                    React.createElement(Chat, { open: chatOpen, messages: messages, onMessage: onSendMessage, disabled: !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento) })))))));
 };
 var templateObject_1$7;
 

@@ -41,7 +41,7 @@ const ContainerTelemedicina = styled.div`
 `;
 
 
-const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = false, publisherType = 'paciente', chamadaEmAndamento, recusouTermo, onSessionEnded, getTokboxApiKey, currentUserName, appLog, onClickVoltar, termoObrigatorio } : VideoSessionType) => {
+const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = false, publisherType = 'paciente', chamadaEmAndamento, recusouTermo, onSessionEnded, getTokboxApiKey, currentUserName, appLog, onClickVoltar, termoObrigatorio }: VideoSessionType) => {
   const sessionRef = useRef<any>();
   const [sessionStatus, setSessionStatus] = useState<String | undefined>();
   const [mensagemErro, setMensagemErro] = useState('');
@@ -57,6 +57,7 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatOpen, setChatOpen] = useState(false);
   const [pictureInPictureEnabled, setPictureInPictureEnabled] = useState(false);
+  const [streamIdVideo, setStreamIdVideo] = useState('');
 
   const onError = (err: Error) => {
     appLog && appLog('<OTSession /> onError ', err);
@@ -115,7 +116,7 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
     setVideoSource(screenSharingOption);
   };
 
-  const onEndCall = () => {
+  const onEndCall = (e) => {
     appLog && appLog('Finalizando chamada de telemedicina');
 
     sessionRef.current?.sessionHelper.session.disconnect(
@@ -139,13 +140,19 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
   }
 
   const sessionEventHandlers: SessionEventHandlers = {
+    streamCreated: (event) => {
+      const { streamId, videoType } = event.stream;
+      if (videoType === 'camera') {
+        setStreamIdVideo(streamId);
+      }
+    },
     connectionDestroyed: (event: any) => {
       /* quando o cliente remoto finaliza a sessão VOLUNTARIAMENTE */
       appLog && appLog('<OTSession /> connectionDestroyed', event);
 
       setSessionStatus(CONNECTION_DESTROYED);
 
-      breadcrumb({message: 'cliente remoto desconectou da sessão', category: 'telemedicina'});
+      breadcrumb({ message: 'cliente remoto desconectou da sessão', category: 'telemedicina' });
 
       onSessionEnded && onSessionEnded(chamadaEmAndamento.codigoSessao);
     },
@@ -157,10 +164,11 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
         sessionRef.current?.sessionHelper.session.connection.connectionId;
 
       breadcrumb(
-        {message: `cliente ${
-          idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto'
-        } conectou na sessão`,
-        category: 'telemedicina'}
+        {
+          message: `cliente ${idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto'
+            } conectou na sessão`,
+          category: 'telemedicina'
+        }
       );
 
       appLog && appLog('Minha conexão? ', idConexaoOrigem === idMinhaConexao);
@@ -180,11 +188,12 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
       appLog && appLog('Minha conexão?', idConexaoOrigem === idMinhaConexao);
 
       breadcrumb(
-        {message: `cliente ${
-          idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto'
-        } desconectou da sessão`,
-        category: 'telemedicina',
-        level: Sentry.Severity.Warning}
+        {
+          message: `cliente ${idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto'
+            } desconectou da sessão`,
+          category: 'telemedicina',
+          level: Sentry.Severity.Warning
+        }
       );
 
       if (idConexaoOrigem === idMinhaConexao) {
@@ -203,11 +212,12 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
           : sessionRef.current?.sessionHelper.session.id;
 
       breadcrumb(
-        {message: `cliente ${
-          idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto'
-        } reconectou na sessão`,
-        category: 'telemedicina',
-        level: Sentry.Severity.Warning}
+        {
+          message: `cliente ${idConexaoOrigem === idMinhaConexao ? 'local' : 'remoto'
+            } reconectou na sessão`,
+          category: 'telemedicina',
+          level: Sentry.Severity.Warning
+        }
       );
 
       setSessionStatus(RECONNECTED);
@@ -224,14 +234,14 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
         const myConnectionId =
           sessionRef.current?.sessionHelper.session.connection.connectionId;
         const itsMe = event?.from.connectionId === myConnectionId;
-        
+
         const newMessage = itsMe
           ? { me: true, label: 'Eu', text: eventData.text }
           : {
-              me: false,
-              label: subscriberNameResolver(),
-              text: eventData.text,
-            };
+            me: false,
+            label: subscriberNameResolver(),
+            text: eventData.text,
+          };
 
         setMessages((m) => [...m, newMessage]);
 
@@ -260,20 +270,24 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
       appLog && appLog(`<OTPublisher /> onError`, err);
 
       captureException(err);
+    },
+    onAccessDenied: (event) => {
+      appLog && appLog(`<OTPublisher /> onAccessDenied`, event);
+      const { streamId } = event.target;
 
-      if (isDeviceNotFound(err)) {
+      if (!streamId) {
         setNoDevice(true);
         setVideoPaciente(false);
+        setMensagemErro(
+          'Para iniciar a chamada de vídeo, é necessário permitir acesso à camera do dispositivo.'
+        );
       }
-    },
-    onAccessDenied: () => {
-      appLog && appLog(`<OTPublisher /> onAccessDenied`);
 
-      setMensagemErro(
-        'Para iniciar a chamada de vídeo, é necessário permitir acesso à camera do dispositivo.'
-      );
-
-      onEndCall();
+      if (streamId !== streamIdVideo && event.cancelable) {
+        event.preventDefault();
+        setStreamIdVideo('');
+        setVideoSource(videoSources.CAMERA);
+      }
     },
   };
 
@@ -287,9 +301,10 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
     if (termoObrigatorio && recusouTermo) {
       appLog && appLog('Finalizando chamada de telemedicina');
 
-      sessionRef.current?.sessionHelper.session.disconnect(
-        chamadaEmAndamento.codigoSessao
-      );
+      sessionRef.current &&
+        sessionRef.current?.sessionHelper.session.disconnect(
+          chamadaEmAndamento.codigoSessao
+        );
 
       appLog && appLog('Chamada finalizada com sucesso');
 
@@ -373,24 +388,25 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
           onError={onError}
           eventHandlers={sessionEventHandlers}
         >
-        {!pictureInPictureEnabled && (
-          <>
-            <StreamSubscriber
-              {...streamMedicoHandlers}
-              nomeSubscriber={subscriberNameResolver()}
-            />
-          
-              <StreamPublisher
-                {...streamPacienteHandlers}
-                noDevice={noDevice}
-                videoEnabled={videoPacienteEnabled()}
-                onToggleVideo={onToggleVideo}
-                audioEnabled={audioPacienteEnabled()}
-                onToggleAudio={onToggleAudio}
-                sharingScreen={videoSource === videoSources.SCREEN}
-                nomePublisher={getPrimeiroNome(currentUserName, 10)}
-                videoSource={videoSource}
-              />
+
+          {!pictureInPictureEnabled && (<StreamSubscriber
+            {...streamMedicoHandlers}
+            nomeSubscriber={subscriberNameResolver()}
+          />)}
+
+          <StreamPublisher
+            {...streamPacienteHandlers}
+            noDevice={noDevice}
+            videoEnabled={videoPacienteEnabled()}
+            onToggleVideo={onToggleVideo}
+            audioEnabled={audioPacienteEnabled()}
+            onToggleAudio={onToggleAudio}
+            sharingScreen={videoSource === videoSources.SCREEN}
+            nomePublisher={getPrimeiroNome(currentUserName, 10)}
+            videoSource={videoSource}
+          />
+          {!pictureInPictureEnabled && (
+            <>
               <BarraOpcoes
                 chatOpen={chatOpen}
                 onToggleChat={onToggleChat}
@@ -409,7 +425,7 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
                   !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento)
                 }
               />
-          </>
+            </>
           )}
         </Wrapper>
       </ContainerTelemedicina>
