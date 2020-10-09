@@ -4,5 +4,6 @@ export interface ChatType {
     open: boolean,
     messages: Message[],
     disabled?: boolean,
-    onMessage?: (inputMessage: string) => void
+    onMessage?: (inputMessage: string) => void,
+    uploadFileEnabled?: boolean,
 }

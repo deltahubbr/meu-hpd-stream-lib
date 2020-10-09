@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { Error, Event, StreamCreatedEvent } from "opentok-react/types/opentok";
+import { Error, Event, MediaStoppedEvent, StreamCreatedEvent } from "opentok-react/types/opentok";
 export interface StreamPacienteType {
     nomePublisher?: string;
     noDevice: boolean;
@@ -14,4 +14,5 @@ export interface StreamPacienteType {
     onAccessDenied?: (event: Event<"accessDenied", unknown>) => void;
     onStreamCreated?: (event: StreamCreatedEvent) => void;
     onStreamDestroyed?: (event: string) => void;
+    onMediaStopped?: (event: MediaStoppedEvent) => void;
 }

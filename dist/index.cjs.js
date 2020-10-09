@@ -6,11 +6,13 @@ var Sentry = require('@sentry/react');
 var opentokReact = require('opentok-react');
 var reactstrap = require('reactstrap');
 var lodash = require('lodash');
+var ReactLoading = require('react-loading');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
 var styled__default = /*#__PURE__*/_interopDefaultLegacy(styled);
+var ReactLoading__default = /*#__PURE__*/_interopDefaultLegacy(ReactLoading);
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -185,7 +187,7 @@ var ContainerCameraPaciente = styled__default['default'].div(templateObject_2$1 
 }, theme.breakpoints.md);
 var NoDevice = styled__default['default'].div(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  flex: 1;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"], ["\n  flex: 1;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"])));
 function StreamPaciente(_a) {
-    var nomePublisher = _a.nomePublisher, _b = _a.noDevice, noDevice = _b === void 0 ? false : _b, videoSource = _a.videoSource, sharingScreen = _a.sharingScreen, _c = _a.videoEnabled, videoEnabled = _c === void 0 ? true : _c, onToggleVideo = _a.onToggleVideo, _d = _a.audioEnabled, audioEnabled = _d === void 0 ? true : _d, onToggleAudio = _a.onToggleAudio, onPublish = _a.onPublish, onError = _a.onError, onAccessDenied = _a.onAccessDenied, onStreamCreated = _a.onStreamCreated, onStreamDestroyed = _a.onStreamDestroyed;
+    var nomePublisher = _a.nomePublisher, _b = _a.noDevice, noDevice = _b === void 0 ? false : _b, videoSource = _a.videoSource, sharingScreen = _a.sharingScreen, _c = _a.videoEnabled, videoEnabled = _c === void 0 ? true : _c, onToggleVideo = _a.onToggleVideo, _d = _a.audioEnabled, audioEnabled = _d === void 0 ? true : _d, onToggleAudio = _a.onToggleAudio, onPublish = _a.onPublish, onError = _a.onError, onAccessDenied = _a.onAccessDenied, onStreamCreated = _a.onStreamCreated, onStreamDestroyed = _a.onStreamDestroyed, onMediaStopped = _a.onMediaStopped;
     var publisherEventHandlers = {
         accessDenied: function (event) {
             onAccessDenied && onAccessDenied(event);
@@ -196,6 +198,9 @@ function StreamPaciente(_a) {
         streamDestroyed: function (_a) {
             var reason = _a.reason;
             onStreamDestroyed && onStreamDestroyed(reason);
+        },
+        mediaStopped: function (e) {
+            onMediaStopped && onMediaStopped(e);
         },
     };
     var publisherProperties = React.useMemo(function () {
@@ -230,13 +235,88 @@ function StreamPaciente(_a) {
 }
 var templateObject_1$2, templateObject_2$1, templateObject_3;
 
-var ChatContainer = styled__default['default'].div(templateObject_1$3 || (templateObject_1$3 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 15px;\n  right: 15px;\n  height: 300px;\n  width: 350px;\n  border-radius: 15px;\n  background-color: ", ";\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: stretch;\n  -webkit-border-bottom-left-radius: 5px;\n  -webkit-border-bottom-right-radius: 5px;\n  -moz-border-radius-bottomleft: 5px;\n  -moz-border-radius-bottomright: 5px;\n  border-bottom-left-radius: 5px;\n  border-bottom-right-radius: 5px;\n"], ["\n  position: absolute;\n  bottom: 15px;\n  right: 15px;\n  height: 300px;\n  width: 350px;\n  border-radius: 15px;\n  background-color: ", ";\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: stretch;\n  -webkit-border-bottom-left-radius: 5px;\n  -webkit-border-bottom-right-radius: 5px;\n  -moz-border-radius-bottomleft: 5px;\n  -moz-border-radius-bottomright: 5px;\n  border-bottom-left-radius: 5px;\n  border-bottom-right-radius: 5px;\n"])), theme.colors.gray50);
-var ChatHead = styled__default['default'].div(templateObject_2$2 || (templateObject_2$2 = __makeTemplateObject(["\n  height: 35px;\n  width: 100%;\n  background-color: ", ";\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  color: #ffffff;\n  -webkit-border-top-left-radius: 10px;\n  -webkit-border-top-right-radius: 10px;\n  -moz-border-radius-topleft: 10px;\n  -moz-border-radius-topright: 10px;\n  border-top-left-radius: 10px;\n  border-top-right-radius: 10px;\n"], ["\n  height: 35px;\n  width: 100%;\n  background-color: ", ";\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  color: #ffffff;\n  -webkit-border-top-left-radius: 10px;\n  -webkit-border-top-right-radius: 10px;\n  -moz-border-radius-topleft: 10px;\n  -moz-border-radius-topright: 10px;\n  border-top-left-radius: 10px;\n  border-top-right-radius: 10px;\n"])), theme.colors.blue700);
+var uploadFileTypes = {
+    WORD: ['.doc', '.docx'],
+    PDF: ['.pdf'],
+    EXCEL: ['.xls', '.xlsx', '.xlsm'],
+    IMAGES: ['.jpg', '.jpeg', '.png'],
+};
+
+var Container = styled__default['default'].div(templateObject_1$3 || (templateObject_1$3 = __makeTemplateObject(["\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100px;\n  padding: 5px;\n  border: solid 1px #b7c2da;\n  border-radius: 4px;\n  background-color: #e7ecf7;\n\n  :hover  {\n    cursor: pointer;\n  }\n"], ["\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100px;\n  padding: 5px;\n  border: solid 1px #b7c2da;\n  border-radius: 4px;\n  background-color: #e7ecf7;\n\n  :hover  {\n    cursor: pointer;\n  }\n"])));
+var NomeArquivo = styled__default['default'].span(templateObject_2$2 || (templateObject_2$2 = __makeTemplateObject(["\n  margin-top: 0.5rem;\n  line-height: 1.3;\n  font-size: 10px;\n  text-align: center;\n  word-break: break-all;\n"], ["\n  margin-top: 0.5rem;\n  line-height: 1.3;\n  font-size: 10px;\n  text-align: center;\n  word-break: break-all;\n"])));
+var templateObject_1$3, templateObject_2$2;
+
+var FileChatLink = function (_a) {
+    var arquivo = _a.arquivo;
+    var extIcons = [
+        {
+            ext: uploadFileTypes.PDF,
+            icon: 'fas fa-file-pdf',
+        },
+        {
+            ext: uploadFileTypes.WORD,
+            icon: 'fas fa-file-word',
+        },
+        {
+            ext: uploadFileTypes.EXCEL,
+            icon: 'fas fa-file-excel',
+        },
+        {
+            ext: uploadFileTypes.IMAGES,
+            icon: 'fas fa-file-image',
+        }
+    ];
+    var iconTypeResolverr = function () {
+        var _a;
+        return (_a = lodash.find(extIcons, function (types) { return lodash.some(types.ext, function (ext) { return ext === (arquivo === null || arquivo === void 0 ? void 0 : arquivo.extension); }); })) === null || _a === void 0 ? void 0 : _a.icon;
+    };
+    return arquivo && (React__default['default'].createElement(Container, null,
+        React__default['default'].createElement(Icone, { color: theme.colors.gray400, icone: iconTypeResolverr(), size: "30px" }),
+        React__default['default'].createElement(NomeArquivo, null, "nome_do_arquivo.pdf"))) || null;
+};
+
+var UploaderContainer = styled__default['default'].div(templateObject_1$4 || (templateObject_1$4 = __makeTemplateObject(["\n  display: flex;\n  position: absolute;\n  height: 100%;\n  left: 10px;\n  align-items: center;\n\n  :hover {\n    cursor: ", ";\n\n    i {\n      color: ", " !important;\n      :hover {\n        cursor: pointer;\n      }\n    }\n  }\n"], ["\n  display: flex;\n  position: absolute;\n  height: 100%;\n  left: 10px;\n  align-items: center;\n\n  :hover {\n    cursor: ", ";\n\n    i {\n      color: ", " !important;\n      :hover {\n        cursor: pointer;\n      }\n    }\n  }\n"])), function (props) { return props.disabled ? 'default' : 'pointer'; }, theme.colors.gray800);
+var InputFile = styled__default['default'].input(templateObject_2$3 || (templateObject_2$3 = __makeTemplateObject(["\n  width: 0.1px;\n  height: 0.1px;\n  opacity: 0;\n  overflow: hidden;\n  position: absolute;\n  z-index: -1;\n\n  :focus + label {\n    /* keyboard navigation */\n    outline: 1px dotted #000;\n    outline: -webkit-focus-ring-color auto 5px;\n  }\n"], ["\n  width: 0.1px;\n  height: 0.1px;\n  opacity: 0;\n  overflow: hidden;\n  position: absolute;\n  z-index: -1;\n\n  :focus + label {\n    /* keyboard navigation */\n    outline: 1px dotted #000;\n    outline: -webkit-focus-ring-color auto 5px;\n  }\n"])));
+var templateObject_1$4, templateObject_2$3;
+
+var FileUploader = function (_a) {
+    var disabled = _a.disabled, onLoad = _a.onLoad, onError = _a.onError, isLoading = _a.isLoading;
+    /**
+     *  TODO: Disparar notificação ao ocorrer erro
+     *        do upload da imagem
+     */
+    function handleChange(e) {
+        try {
+            if (e.target.files && e.target.files[0]) {
+                var reader = new FileReader();
+                var ext_1 = e.target.files[0].type.split('/')[1];
+                reader.onload = function (evt) {
+                    var _a;
+                    onLoad({ extensao: ext_1, file: (_a = evt === null || evt === void 0 ? void 0 : evt.target) === null || _a === void 0 ? void 0 : _a.result });
+                };
+                reader.readAsDataURL(e.target.files[0]); // convert to base64 string
+            }
+        }
+        catch (err) {
+            onError(err);
+        }
+    }
+    var acceptedExtensions = Object.keys(uploadFileTypes).map(function (type) {
+        return uploadFileTypes[type];
+    }).join();
+    return (React__default['default'].createElement(UploaderContainer, { disabled: disabled || false }, isLoading ? (React__default['default'].createElement(ReactLoading__default['default'], { type: "spin", color: theme.colors.gray400, height: 25, width: 16 })) : (React__default['default'].createElement(React__default['default'].Fragment, null,
+        React__default['default'].createElement("label", { htmlFor: "file-chat-uploader", style: { margin: '0px' } },
+            React__default['default'].createElement(Icone, { color: (disabled) ? theme.colors.gray300 : theme.colors.gray600, icone: "fas fa-upload", size: "14px" })),
+        React__default['default'].createElement(InputFile, { type: "file", id: "file-chat-uploader", accept: acceptedExtensions, onChange: handleChange })))));
+};
+
+var ChatContainer = styled__default['default'].div(templateObject_1$5 || (templateObject_1$5 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 15px;\n  right: 15px;\n  height: 300px;\n  width: 350px;\n  border-radius: 15px;\n  background-color: ", ";\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: stretch;\n  -webkit-border-bottom-left-radius: 5px;\n  -webkit-border-bottom-right-radius: 5px;\n  -moz-border-radius-bottomleft: 5px;\n  -moz-border-radius-bottomright: 5px;\n  border-bottom-left-radius: 5px;\n  border-bottom-right-radius: 5px;\n"], ["\n  position: absolute;\n  bottom: 15px;\n  right: 15px;\n  height: 300px;\n  width: 350px;\n  border-radius: 15px;\n  background-color: ", ";\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: stretch;\n  -webkit-border-bottom-left-radius: 5px;\n  -webkit-border-bottom-right-radius: 5px;\n  -moz-border-radius-bottomleft: 5px;\n  -moz-border-radius-bottomright: 5px;\n  border-bottom-left-radius: 5px;\n  border-bottom-right-radius: 5px;\n"])), theme.colors.gray50);
+var ChatHead = styled__default['default'].div(templateObject_2$4 || (templateObject_2$4 = __makeTemplateObject(["\n  height: 35px;\n  width: 100%;\n  background-color: ", ";\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  color: #ffffff;\n  -webkit-border-top-left-radius: 10px;\n  -webkit-border-top-right-radius: 10px;\n  -moz-border-radius-topleft: 10px;\n  -moz-border-radius-topright: 10px;\n  border-top-left-radius: 10px;\n  border-top-right-radius: 10px;\n"], ["\n  height: 35px;\n  width: 100%;\n  background-color: ", ";\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  color: #ffffff;\n  -webkit-border-top-left-radius: 10px;\n  -webkit-border-top-right-radius: 10px;\n  -moz-border-radius-topleft: 10px;\n  -moz-border-radius-topright: 10px;\n  border-top-left-radius: 10px;\n  border-top-right-radius: 10px;\n"])), theme.colors.blue700);
 var ChatHeadTitle = styled__default['default'].span(templateObject_3$1 || (templateObject_3$1 = __makeTemplateObject(["\n  color: #ffffff;\n  font-size: 9pt;\n  font-weight: 400;\n"], ["\n  color: #ffffff;\n  font-size: 9pt;\n  font-weight: 400;\n"])));
 var MessagesContainer = styled__default['default'].div(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n  display: flex;\n  flex: 1;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n"], ["\n  display: flex;\n  flex: 1;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n"])));
 var MessagesContainerWrapper = styled__default['default'].div(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n  width: 100%;\n  max-height: 220px;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  padding: 5px;\n"], ["\n  width: 100%;\n  max-height: 220px;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  padding: 5px;\n"])));
 var InputContainer = styled__default['default'].div(templateObject_6 || (templateObject_6 = __makeTemplateObject(["\n  width: 100%;\n  display: flex;\n"], ["\n  width: 100%;\n  display: flex;\n"])));
-var CustomForm = styled__default['default'](reactstrap.Form)(templateObject_7 || (templateObject_7 = __makeTemplateObject(["\n  flex: 1;\n  display: flex;\n"], ["\n  flex: 1;\n  display: flex;\n"])));
+var CustomForm = styled__default['default'](reactstrap.Form)(templateObject_7 || (templateObject_7 = __makeTemplateObject(["\n  flex: 1;\n  display: flex;\n  position: relative;\n"], ["\n  flex: 1;\n  display: flex;\n  position: relative;\n"])));
 var MessageBoxContainer = styled__default['default'].div(templateObject_8 || (templateObject_8 = __makeTemplateObject(["\n  margin-bottom: 20px;\n"], ["\n  margin-bottom: 20px;\n"])));
 var MessageLabel = styled__default['default'].div(templateObject_9 || (templateObject_9 = __makeTemplateObject(["\n  text-align: ", ";\n"], ["\n  text-align: ", ";\n"])), function (props) { return props.align || 'right'; });
 var MessageBoxLabel = function (_a) {
@@ -244,40 +324,74 @@ var MessageBoxLabel = function (_a) {
     return (React__default['default'].createElement(MessageLabel, { align: align },
         React__default['default'].createElement("p", { className: "h5" }, children + ":")));
 };
-var MessageBoxText = styled__default['default'].div(templateObject_10 || (templateObject_10 = __makeTemplateObject(["\n  word-break: break-word;\n  text-align: ", ";\n"], ["\n  word-break: break-word;\n  text-align: ", ";\n"])), function (props) { return props.align || 'right'; });
+var MessageBoxContent = styled__default['default'].div(templateObject_10 || (templateObject_10 = __makeTemplateObject(["\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: ", ";\n"], ["\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: ", ";\n"])), function (props) { return props.justify || 'flex-end'; });
 var EmptyMessages = styled__default['default'].div(templateObject_11 || (templateObject_11 = __makeTemplateObject(["\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"], ["\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"])));
 var EmptyText = styled__default['default'].span(templateObject_12 || (templateObject_12 = __makeTemplateObject(["\n  margin-top: 15px;\n  font-size: 10pt;\n  color: ", ";\n"], ["\n  margin-top: 15px;\n  font-size: 10pt;\n  color: ", ";\n"])), theme.colors.gray500);
 function Chat(_a) {
-    var open = _a.open, _b = _a.messages, messages = _b === void 0 ? [] : _b, disabled = _a.disabled, onMessage = _a.onMessage;
-    var _c = React.useState(''), inputMessage = _c[0], setInputMessage = _c[1];
+    var open = _a.open, _b = _a.messages, messages = _b === void 0 ? [] : _b, _c = _a.disabled, disabled = _c === void 0 ? false : _c, onMessage = _a.onMessage, _d = _a.uploadFileEnabled, uploadFileEnabled = _d === void 0 ? true : _d;
+    var messagesEndRef = React.useRef();
+    var _e = React.useState(''), inputMessage = _e[0], setInputMessage = _e[1];
+    var _f = React.useState(false), isUploadingFile = _f[0], setIsUploadingFile = _f[1];
+    var _g = React.useState([
+        {
+            me: true,
+            text: 'Olá, testando',
+            label: 'Eu'
+        },
+    ]), fakeMessages = _g[0], setFakeMessages = _g[1];
+    disabled = false;
     var onSubmit = function (evt) {
         evt.preventDefault();
-        onMessage && onMessage(inputMessage);
+        // onMessage && onMessage(inputMessage);
+        setFakeMessages(__spreadArrays(fakeMessages, [{ me: true, text: 'Mais um', label: 'Eu' }]));
         setInputMessage('');
     };
     var hasMessages = messages.length > 0;
+    React.useEffect(function () {
+        var _a;
+        (_a = messagesEndRef.current) === null || _a === void 0 ? void 0 : _a.scrollIntoView({ behavior: 'smooth' });
+    }, [messages, fakeMessages]);
+    var handleSelectFile = function (_a) {
+        var extensao = _a.extensao, file = _a.file;
+        setIsUploadingFile(true);
+        var requestSimulator = setTimeout(function () {
+            setIsUploadingFile(false);
+            setFakeMessages(__spreadArrays(fakeMessages, [{
+                    me: true,
+                    file: React__default['default'].createElement(FileChatLink, { arquivo: { url: 'https://atendimento-dev.hpd.com.br/static/media/logo_hpd.61dd7b30.png', name: 'logo_hpd', extension: '.png' } }),
+                    label: 'Eu'
+                }]));
+            clearTimeout(requestSimulator);
+        }, 3000);
+    };
+    var handleSelectFileError = function (error) {
+        alert('ocorreu um erro');
+    };
     return (React__default['default'].createElement(ChatContainer, { className: "" + (open ? '' : 'd-none') },
         React__default['default'].createElement(ChatHead, null,
             React__default['default'].createElement(ChatHeadTitle, null, "Chat")),
         React__default['default'].createElement(MessagesContainer, null,
-            hasMessages && (React__default['default'].createElement(MessagesContainerWrapper, null, lodash.map(messages, function (message, index) { return (React__default['default'].createElement(React.Fragment, { key: index },
-                message.me && (React__default['default'].createElement(MessageBoxContainer, null,
-                    React__default['default'].createElement(MessageBoxLabel, { align: "right" }, message.label),
-                    React__default['default'].createElement(MessageBoxText, { align: "right" }, message.text))),
-                !message.me && (React__default['default'].createElement(MessageBoxContainer, null,
-                    React__default['default'].createElement(MessageBoxLabel, { align: "left" }, message.label),
-                    React__default['default'].createElement(MessageBoxText, { align: "left" }, message.text))))); }))),
-            !hasMessages && (React__default['default'].createElement(EmptyMessages, null,
+            fakeMessages[0] && (React__default['default'].createElement(MessagesContainerWrapper, null,
+                lodash.map(fakeMessages, function (message, index) { return (React__default['default'].createElement(React.Fragment, { key: index },
+                    message.me && (React__default['default'].createElement(MessageBoxContainer, null,
+                        React__default['default'].createElement(MessageBoxLabel, { align: "right" }, message.label),
+                        React__default['default'].createElement(MessageBoxContent, { justify: "flex-end" }, message.file || message.text))),
+                    !message.me && (React__default['default'].createElement(MessageBoxContainer, null,
+                        React__default['default'].createElement(MessageBoxLabel, { align: "left" }, message.label),
+                        React__default['default'].createElement(MessageBoxContent, { justify: "flex-start" }, message.file || message.text))))); }),
+                React__default['default'].createElement("div", { ref: messagesEndRef }))),
+            !fakeMessages[0] && (React__default['default'].createElement(EmptyMessages, null,
                 React__default['default'].createElement(Icone, { color: theme.colors.gray500, icone: "fas fa-comment-slash", size: "48px" }),
                 React__default['default'].createElement(EmptyText, null, "Nenhuma mensagem encontrada")))),
         React__default['default'].createElement(InputContainer, null,
             React__default['default'].createElement(CustomForm, { onSubmit: onSubmit },
-                React__default['default'].createElement(reactstrap.Input, { type: "text", placeholder: "Digite a mensagem", value: inputMessage, onChange: function (evt) { return setInputMessage(evt.target.value); }, maxLength: 160, disabled: disabled }),
+                uploadFileEnabled && (React__default['default'].createElement(FileUploader, { onLoad: handleSelectFile, onError: handleSelectFileError, isLoading: isUploadingFile })),
+                React__default['default'].createElement(reactstrap.Input, { style: { paddingLeft: uploadFileEnabled ? '2rem' : '0.75rem' }, type: "text", placeholder: isUploadingFile ? 'Enviando arquivo...' : 'Digite a mensagem', value: inputMessage, onChange: function (evt) { return setInputMessage(evt.target.value); }, maxLength: 160, disabled: disabled }),
                 React__default['default'].createElement(reactstrap.Button, { title: "Enviar", type: "submit", disabled: disabled }, "Enviar")))));
 }
-var templateObject_1$3, templateObject_2$2, templateObject_3$1, templateObject_4, templateObject_5, templateObject_6, templateObject_7, templateObject_8, templateObject_9, templateObject_10, templateObject_11, templateObject_12;
+var templateObject_1$5, templateObject_2$4, templateObject_3$1, templateObject_4, templateObject_5, templateObject_6, templateObject_7, templateObject_8, templateObject_9, templateObject_10, templateObject_11, templateObject_12;
 
-var RoundedIconContainer = styled__default['default'].span(templateObject_1$4 || (templateObject_1$4 = __makeTemplateObject(["\n  width: 48px;\n  height: 48px;\n  background-color: ", ";\n  color: #ffffff;\n  border-radius: 50px;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n  cursor: pointer;\n\n  &:hover {\n    background-color: ", ";\n  }\n"], ["\n  width: 48px;\n  height: 48px;\n  background-color: ",
+var RoundedIconContainer = styled__default['default'].span(templateObject_1$6 || (templateObject_1$6 = __makeTemplateObject(["\n  width: 48px;\n  height: 48px;\n  background-color: ", ";\n  color: #ffffff;\n  border-radius: 50px;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n  cursor: pointer;\n\n  &:hover {\n    background-color: ", ";\n  }\n"], ["\n  width: 48px;\n  height: 48px;\n  background-color: ",
     ";\n  color: #ffffff;\n  border-radius: 50px;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n  cursor: pointer;\n\n  &:hover {\n    background-color: ",
     ";\n  }\n"])), function (props) {
     return props.inverted ? props.invertedBg : props.bg;
@@ -293,10 +407,10 @@ function RoundedIcon(_a) {
             React__default['default'].createElement(Icone, { icone: icon })))); }, [onClick]);
     return React__default['default'].createElement(Component, null);
 }
-var templateObject_1$4;
+var templateObject_1$6;
 
-var BarraOpcoesContainer = styled__default['default'].div(templateObject_1$5 || (templateObject_1$5 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100vw;\n  height: 75px;\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  padding-left: 15px;\n  @media screen and (min-width: ", ") {\n    justify-content: center;\n    align-items: center;\n  }\n"], ["\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100vw;\n  height: 75px;\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  padding-left: 15px;\n  @media screen and (min-width: ", ") {\n    justify-content: center;\n    align-items: center;\n  }\n"])), theme.breakpoints.lg);
-var OpcoesContainer = styled__default['default'].div(templateObject_2$3 || (templateObject_2$3 = __makeTemplateObject(["\n  display: flex;\n  width: 150px;\n  justify-content: space-around;\n  align-items: center;\n  @media screen and (min-width: ", ") {\n    width: 250px;\n  }\n"], ["\n  display: flex;\n  width: 150px;\n  justify-content: space-around;\n  align-items: center;\n  @media screen and (min-width: ", ") {\n    width: 250px;\n  }\n"])), theme.breakpoints.lg);
+var BarraOpcoesContainer = styled__default['default'].div(templateObject_1$7 || (templateObject_1$7 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100vw;\n  height: 75px;\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  padding-left: 15px;\n  @media screen and (min-width: ", ") {\n    justify-content: center;\n    align-items: center;\n  }\n"], ["\n  position: absolute;\n  bottom: 0px;\n  left: 0px;\n  width: 100vw;\n  height: 75px;\n  display: flex;\n  justify-content: flex-start;\n  align-items: center;\n  padding-left: 15px;\n  @media screen and (min-width: ", ") {\n    justify-content: center;\n    align-items: center;\n  }\n"])), theme.breakpoints.lg);
+var OpcoesContainer = styled__default['default'].div(templateObject_2$5 || (templateObject_2$5 = __makeTemplateObject(["\n  display: flex;\n  width: 150px;\n  justify-content: space-around;\n  align-items: center;\n  @media screen and (min-width: ", ") {\n    width: 250px;\n  }\n"], ["\n  display: flex;\n  width: 150px;\n  justify-content: space-around;\n  align-items: center;\n  @media screen and (min-width: ", ") {\n    width: 250px;\n  }\n"])), theme.breakpoints.lg);
 function BarraOpcoes(_a) {
     var chatOpen = _a.chatOpen, onToggleChat = _a.onToggleChat, onClickPictureInPicture = _a.onClickPictureInPicture, sharingScreen = _a.sharingScreen, onToggleScreenSharing = _a.onToggleScreenSharing, onEndCall = _a.onEndCall, _b = _a.isScreenSharingEnabled, isScreenSharingEnabled = _b === void 0 ? false : _b, _c = _a.isPictureInPictureEnabled, isPictureInPictureEnabled = _c === void 0 ? false : _c, disabled = _a.disabled;
     return (React__default['default'].createElement(BarraOpcoesContainer, null,
@@ -308,7 +422,7 @@ function BarraOpcoes(_a) {
                     ? 'Parar compartilhamento de tela'
                     : 'Compartilhar tela' })))));
 }
-var templateObject_1$5, templateObject_2$3;
+var templateObject_1$7, templateObject_2$5;
 
 /* eslint-disable react/prop-types */
 function ConfirmationModal(_a) {
@@ -324,11 +438,11 @@ function ConfirmationModal(_a) {
             loadingButtonComponent && loadingButtonComponent({ confirmLoading: confirmLoading, onConfirmar: onConfirmar, confirmDisabled: confirmDisabled, confirmLabel: confirmLabel }) || (React__default['default'].createElement(reactstrap.Button, { color: "primary", type: "button", onClick: onConfirmar, disabled: confirmDisabled }, confirmLabel || 'Confirmar')))));
 }
 
-var ContainerSemChamadas = styled__default['default'].div(templateObject_1$6 || (templateObject_1$6 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  background-color: ", ";\n"], ["\n  height: 100vh;\n  width: 100vw;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  background-color: ", ";\n"])), theme.colors.gray50);
+var ContainerSemChamadas = styled__default['default'].div(templateObject_1$8 || (templateObject_1$8 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  background-color: ", ";\n"], ["\n  height: 100vh;\n  width: 100vw;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  background-color: ", ";\n"])), theme.colors.gray50);
 var CustomCard = styled__default['default'](reactstrap.Card)({
     padding: '30px',
 });
-var CustomSpan = styled__default['default'].span(templateObject_2$4 || (templateObject_2$4 = __makeTemplateObject(["\n  text-align: center;\n"], ["\n  text-align: center;\n"])));
+var CustomSpan = styled__default['default'].span(templateObject_2$6 || (templateObject_2$6 = __makeTemplateObject(["\n  text-align: center;\n"], ["\n  text-align: center;\n"])));
 function CardErro(_a) {
     var children = _a.children, onClickVoltar = _a.onClickVoltar;
     return (React__default['default'].createElement(ContainerSemChamadas, null,
@@ -337,9 +451,9 @@ function CardErro(_a) {
                 React__default['default'].createElement(CustomSpan, { className: "h3" }, children)),
             React__default['default'].createElement(reactstrap.Button, { color: "primary", outline: true, type: "button", onClick: onClickVoltar }, "Voltar para o in\u00EDcio"))));
 }
-var templateObject_1$6, templateObject_2$4;
+var templateObject_1$8, templateObject_2$6;
 
-var ContainerTelemedicina = styled__default['default'].div(templateObject_1$7 || (templateObject_1$7 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"], ["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"])), theme.colors.gray50);
+var ContainerTelemedicina = styled__default['default'].div(templateObject_1$9 || (templateObject_1$9 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"], ["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"])), theme.colors.gray50);
 var VideoSession = function (_a) {
     var onTogglePictureInPicture = _a.onTogglePictureInPicture, _b = _a.isPictureInPictureEnabled, isPictureInPictureEnabled = _b === void 0 ? false : _b, _c = _a.publisherType, publisherType = _c === void 0 ? 'paciente' : _c, chamadaEmAndamento = _a.chamadaEmAndamento, recusouTermo = _a.recusouTermo, onSessionEnded = _a.onSessionEnded, getTokboxApiKey = _a.getTokboxApiKey, currentUserName = _a.currentUserName, appLog = _a.appLog, onClickVoltar = _a.onClickVoltar, termoObrigatorio = _a.termoObrigatorio;
     var sessionRef = React.useRef();
@@ -531,6 +645,13 @@ var VideoSession = function (_a) {
                 setVideoSource(videoSources.CAMERA);
             }
         },
+        onMediaStopped: function (event) {
+            var stream = event.target.stream;
+            if (stream && stream.videoType === 'screen' && event.cancelable) {
+                event.preventDefault();
+                onToggleScreenSharing();
+            }
+        }
     };
     React.useEffect(function () {
         if (sessionStatus === CONNECTION_DESTROYED && (termoObrigatorio && !recusouTermo)) {
@@ -609,6 +730,6 @@ var VideoSession = function (_a) {
                     React__default['default'].createElement(BarraOpcoes, { chatOpen: chatOpen, onToggleChat: onToggleChat, sharingScreen: videoSource === videoSources.SCREEN, onToggleScreenSharing: onToggleScreenSharing, onEndCall: onMostrarConfirmacaoFinalizacao, disabled: termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento, isPictureInPictureEnabled: isPictureInPictureEnabled, onClickPictureInPicture: pictureInpictureRequest }),
                     React__default['default'].createElement(Chat, { open: chatOpen, messages: messages, onMessage: onSendMessage, disabled: !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento) })))))));
 };
-var templateObject_1$7;
+var templateObject_1$9;
 
 module.exports = VideoSession;

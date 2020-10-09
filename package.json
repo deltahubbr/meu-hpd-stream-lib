@@ -36,7 +36,8 @@
     "@sentry/react": "^5.24.2",
     "lodash": "^4.17.20",
     "opentok-react": "^0.11.0",
-    "react-loadingg": "^1.7.2",
+    "react-loader": "^2.4.7",
+    "react-loading": "^2.0.3",
     "reactstrap": "^8.6.0"
   },
   "peerDependencies": {
