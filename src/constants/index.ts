@@ -12,7 +12,8 @@ export const MEDIA_ACCESS_DENIED = 'OT_USER_MEDIA_ACCESS_DENIED';
 
 export const NETWORK_ISSUE = 'networkDisconnected';
 
-export const SIGNAL_TYPE = 'signal:text-chat';
+export const SIGNAL_TYPE_TEXT = 'signal:text-chat';
+export const SIGNAL_TYPE_FILE = 'signal:file-chat';
 
 export const videoSources = {
   CAMERA: 'camera',

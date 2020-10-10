@@ -44,6 +44,44 @@ function __rest(s, e) {
     return t;
 }
 
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
 function __spreadArrays() {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
     for (var r = Array(s), k = 0, i = 0; i < il; i++)
@@ -62,7 +100,8 @@ var RECONNECTED = 'reconnected';
 var RECONNECTING = 'reconnecting';
 var CONNECTION_DESTROYED = 'connectionDestroyed';
 var AUTHENTICATION_ERROR = 'OT_AUTHENTICATION_ERROR';
-var SIGNAL_TYPE = 'signal:text-chat';
+var SIGNAL_TYPE_TEXT = 'signal:text-chat';
+var SIGNAL_TYPE_FILE = 'signal:file-chat';
 var videoSources = {
     CAMERA: 'camera',
     SCREEN: 'screen',
@@ -234,7 +273,7 @@ var uploadFileTypes = {
     IMAGES: ['.jpg', '.jpeg', '.png'],
 };
 
-var Container = styled.div(templateObject_1$3 || (templateObject_1$3 = __makeTemplateObject(["\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100px;\n  padding: 5px;\n  border: solid 1px #b7c2da;\n  border-radius: 4px;\n  background-color: #e7ecf7;\n\n  :hover  {\n    cursor: pointer;\n  }\n"], ["\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100px;\n  padding: 5px;\n  border: solid 1px #b7c2da;\n  border-radius: 4px;\n  background-color: #e7ecf7;\n\n  :hover  {\n    cursor: pointer;\n  }\n"])));
+var Container = styled.a(templateObject_1$3 || (templateObject_1$3 = __makeTemplateObject(["\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100px;\n  padding: 5px;\n  border: solid 1px #b7c2da;\n  border-radius: 4px;\n  background-color: #e7ecf7;\n\n  :hover  {\n    cursor: pointer;\n  }\n"], ["\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100px;\n  padding: 5px;\n  border: solid 1px #b7c2da;\n  border-radius: 4px;\n  background-color: #e7ecf7;\n\n  :hover  {\n    cursor: pointer;\n  }\n"])));
 var NomeArquivo = styled.span(templateObject_2$2 || (templateObject_2$2 = __makeTemplateObject(["\n  margin-top: 0.5rem;\n  line-height: 1.3;\n  font-size: 10px;\n  text-align: center;\n  word-break: break-all;\n"], ["\n  margin-top: 0.5rem;\n  line-height: 1.3;\n  font-size: 10px;\n  text-align: center;\n  word-break: break-all;\n"])));
 var templateObject_1$3, templateObject_2$2;
 
@@ -262,9 +301,9 @@ var FileChatLink = function (_a) {
         var _a;
         return (_a = find(extIcons, function (types) { return some(types.ext, function (ext) { return ext === (arquivo === null || arquivo === void 0 ? void 0 : arquivo.extension); }); })) === null || _a === void 0 ? void 0 : _a.icon;
     };
-    return arquivo && (React.createElement(Container, null,
+    return arquivo && (React.createElement(Container, { href: arquivo.url, target: "_blank" },
         React.createElement(Icone, { color: theme.colors.gray400, icone: iconTypeResolverr(), size: "30px" }),
-        React.createElement(NomeArquivo, null, "nome_do_arquivo.pdf"))) || null;
+        React.createElement(NomeArquivo, null, arquivo.name))) || null;
 };
 
 var UploaderContainer = styled.div(templateObject_1$4 || (templateObject_1$4 = __makeTemplateObject(["\n  display: flex;\n  position: absolute;\n  height: 100%;\n  left: 10px;\n  align-items: center;\n\n  :hover {\n    cursor: ", ";\n\n    i {\n      color: ", " !important;\n      :hover {\n        cursor: pointer;\n      }\n    }\n  }\n"], ["\n  display: flex;\n  position: absolute;\n  height: 100%;\n  left: 10px;\n  align-items: center;\n\n  :hover {\n    cursor: ", ";\n\n    i {\n      color: ", " !important;\n      :hover {\n        cursor: pointer;\n      }\n    }\n  }\n"])), function (props) { return props.disabled ? 'default' : 'pointer'; }, theme.colors.gray800);
@@ -281,10 +320,11 @@ var FileUploader = function (_a) {
         try {
             if (e.target.files && e.target.files[0]) {
                 var reader = new FileReader();
-                var ext_1 = e.target.files[0].type.split('/')[1];
+                var ext_1 = "." + e.target.files[0].type.split('/')[1];
+                var nome_1 = e.target.files[0].name;
                 reader.onload = function (evt) {
                     var _a;
-                    onLoad({ extensao: ext_1, file: (_a = evt === null || evt === void 0 ? void 0 : evt.target) === null || _a === void 0 ? void 0 : _a.result });
+                    onLoad({ nome: nome_1, extensao: ext_1, file: (_a = evt === null || evt === void 0 ? void 0 : evt.target) === null || _a === void 0 ? void 0 : _a.result });
                 };
                 reader.readAsDataURL(e.target.files[0]); // convert to base64 string
             }
@@ -320,59 +360,75 @@ var MessageBoxContent = styled.div(templateObject_10 || (templateObject_10 = __m
 var EmptyMessages = styled.div(templateObject_11 || (templateObject_11 = __makeTemplateObject(["\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"], ["\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"])));
 var EmptyText = styled.span(templateObject_12 || (templateObject_12 = __makeTemplateObject(["\n  margin-top: 15px;\n  font-size: 10pt;\n  color: ", ";\n"], ["\n  margin-top: 15px;\n  font-size: 10pt;\n  color: ", ";\n"])), theme.colors.gray500);
 function Chat(_a) {
-    var open = _a.open, _b = _a.messages, messages = _b === void 0 ? [] : _b, _c = _a.disabled, disabled = _c === void 0 ? false : _c, onMessage = _a.onMessage, _d = _a.uploadFileEnabled, uploadFileEnabled = _d === void 0 ? true : _d;
+    var _this = this;
+    var open = _a.open, _b = _a.messages, messages = _b === void 0 ? [] : _b, _c = _a.disabled, disabled = _c === void 0 ? false : _c, onMessage = _a.onMessage, _d = _a.uploadFileEnabled, uploadFileEnabled = _d === void 0 ? true : _d, onSelectFileUpload = _a.onSelectFileUpload;
     var messagesEndRef = useRef();
     var _e = useState(''), inputMessage = _e[0], setInputMessage = _e[1];
     var _f = useState(false), isUploadingFile = _f[0], setIsUploadingFile = _f[1];
-    var _g = useState([
-        {
-            me: true,
-            text: 'Olá, testando',
-            label: 'Eu'
-        },
-    ]), fakeMessages = _g[0], setFakeMessages = _g[1];
     disabled = false;
     var onSubmit = function (evt) {
         evt.preventDefault();
-        // onMessage && onMessage(inputMessage);
-        setFakeMessages(__spreadArrays(fakeMessages, [{ me: true, text: 'Mais um', label: 'Eu' }]));
+        onMessage && onMessage(inputMessage);
         setInputMessage('');
     };
     var hasMessages = messages.length > 0;
     useEffect(function () {
         var _a;
         (_a = messagesEndRef.current) === null || _a === void 0 ? void 0 : _a.scrollIntoView({ behavior: 'smooth' });
-    }, [messages, fakeMessages]);
+    }, [messages]);
     var handleSelectFile = function (_a) {
-        var extensao = _a.extensao, file = _a.file;
-        setIsUploadingFile(true);
-        var requestSimulator = setTimeout(function () {
-            setIsUploadingFile(false);
-            setFakeMessages(__spreadArrays(fakeMessages, [{
-                    me: true,
-                    file: React.createElement(FileChatLink, { arquivo: { url: 'https://atendimento-dev.hpd.com.br/static/media/logo_hpd.61dd7b30.png', name: 'logo_hpd', extension: '.png' } }),
-                    label: 'Eu'
-                }]));
-            clearTimeout(requestSimulator);
-        }, 3000);
+        var nome = _a.nome, extensao = _a.extensao, file = _a.file;
+        return __awaiter(_this, void 0, void 0, function () {
+            var _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        setIsUploadingFile(true);
+                        _b = onSelectFileUpload;
+                        if (!_b) return [3 /*break*/, 2];
+                        return [4 /*yield*/, onSelectFileUpload({ nome: nome, extensao: extensao, file: file })
+                                .then(function (arquivos) {
+                                arquivos.forEach(function (arquivo) {
+                                    onMessage && onMessage(arquivo);
+                                });
+                            })
+                                .catch(function (err) {
+                            })
+                                .finally(function () {
+                                setIsUploadingFile(false);
+                            })];
+                    case 1:
+                        _b = (_c.sent());
+                        _c.label = 2;
+                    case 2:
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
     var handleSelectFileError = function (error) {
         alert('ocorreu um erro');
+    };
+    var renderMessageBox = function (_a) {
+        var message = _a.message, justify = _a.justify;
+        var _b = (message === null || message === void 0 ? void 0 : message.file) || { url: '', nome: '' }, url = _b.url, nome = _b.nome;
+        return (message === null || message === void 0 ? void 0 : message.file) ? (React.createElement(MessageBoxContent, { justify: justify },
+            React.createElement(FileChatLink, { arquivo: { url: url, name: nome, extension: nome.substr(nome.lastIndexOf('.')) } }))) : (React.createElement(MessageBoxContent, { justify: justify }, message.text));
     };
     return (React.createElement(ChatContainer, { className: "" + (open ? '' : 'd-none') },
         React.createElement(ChatHead, null,
             React.createElement(ChatHeadTitle, null, "Chat")),
         React.createElement(MessagesContainer, null,
-            fakeMessages[0] && (React.createElement(MessagesContainerWrapper, null,
-                map(fakeMessages, function (message, index) { return (React.createElement(Fragment, { key: index },
+            hasMessages && (React.createElement(MessagesContainerWrapper, null,
+                map(messages, function (message, index) { return (React.createElement(Fragment, { key: index },
                     message.me && (React.createElement(MessageBoxContainer, null,
                         React.createElement(MessageBoxLabel, { align: "right" }, message.label),
-                        React.createElement(MessageBoxContent, { justify: "flex-end" }, message.file || message.text))),
+                        renderMessageBox({ message: message, justify: 'flex-end' }))),
                     !message.me && (React.createElement(MessageBoxContainer, null,
                         React.createElement(MessageBoxLabel, { align: "left" }, message.label),
-                        React.createElement(MessageBoxContent, { justify: "flex-start" }, message.file || message.text))))); }),
+                        renderMessageBox({ message: message, justify: 'flex-start' }))))); }),
                 React.createElement("div", { ref: messagesEndRef }))),
-            !fakeMessages[0] && (React.createElement(EmptyMessages, null,
+            !hasMessages && (React.createElement(EmptyMessages, null,
                 React.createElement(Icone, { color: theme.colors.gray500, icone: "fas fa-comment-slash", size: "48px" }),
                 React.createElement(EmptyText, null, "Nenhuma mensagem encontrada")))),
         React.createElement(InputContainer, null,
@@ -447,7 +503,7 @@ var templateObject_1$8, templateObject_2$6;
 
 var ContainerTelemedicina = styled.div(templateObject_1$9 || (templateObject_1$9 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"], ["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"])), theme.colors.gray50);
 var VideoSession = function (_a) {
-    var onTogglePictureInPicture = _a.onTogglePictureInPicture, _b = _a.isPictureInPictureEnabled, isPictureInPictureEnabled = _b === void 0 ? false : _b, _c = _a.publisherType, publisherType = _c === void 0 ? 'paciente' : _c, chamadaEmAndamento = _a.chamadaEmAndamento, recusouTermo = _a.recusouTermo, onSessionEnded = _a.onSessionEnded, getTokboxApiKey = _a.getTokboxApiKey, currentUserName = _a.currentUserName, appLog = _a.appLog, onClickVoltar = _a.onClickVoltar, termoObrigatorio = _a.termoObrigatorio;
+    var onSelectFileUpload = _a.onSelectFileUpload, onTogglePictureInPicture = _a.onTogglePictureInPicture, _b = _a.isPictureInPictureEnabled, isPictureInPictureEnabled = _b === void 0 ? false : _b, _c = _a.publisherType, publisherType = _c === void 0 ? 'paciente' : _c, chamadaEmAndamento = _a.chamadaEmAndamento, recusouTermo = _a.recusouTermo, onSessionEnded = _a.onSessionEnded, getTokboxApiKey = _a.getTokboxApiKey, currentUserName = _a.currentUserName, appLog = _a.appLog, onClickVoltar = _a.onClickVoltar, termoObrigatorio = _a.termoObrigatorio;
     var sessionRef = useRef();
     var _d = useState(), sessionStatus = _d[0], setSessionStatus = _d[1];
     var _e = useState(''), mensagemErro = _e[0], setMensagemErro = _e[1];
@@ -488,15 +544,12 @@ var VideoSession = function (_a) {
     };
     var onSendMessage = function (msg) {
         var _a;
+        var isTextType = typeof msg === 'string';
         (_a = sessionRef.current) === null || _a === void 0 ? void 0 : _a.sessionHelper.session.signal({
-            type: 'text-chat',
-            data: JSON.stringify({
-                text: msg,
-                sender: {
+            type: isTextType ? 'text-chat' : 'file-chat',
+            data: JSON.stringify(__assign(__assign({}, (isTextType ? { text: msg } : { file: JSON.stringify(msg) })), { sender: {
                     alias: getPrimeiroNome(publisherIsPaciente() ? currentUserName : chamadaEmAndamento.subscriberName),
-                },
-                sentOn: new Date().getTime(),
-            }),
+                }, sentOn: new Date().getTime() })),
         });
     };
     var onToggleScreenSharing = function () {
@@ -588,9 +641,9 @@ var VideoSession = function (_a) {
             setSessionStatus(RECONNECTING);
         },
         signal: function (event) {
-            var _a;
+            var _a, _b;
             appLog && appLog('<OTSession /> signal', event);
-            if ((event === null || event === void 0 ? void 0 : event.data) && (event === null || event === void 0 ? void 0 : event.type) === SIGNAL_TYPE) {
+            if ((event === null || event === void 0 ? void 0 : event.data) && (event === null || event === void 0 ? void 0 : event.type) === SIGNAL_TYPE_TEXT) {
                 var eventData = JSON.parse(event === null || event === void 0 ? void 0 : event.data);
                 var myConnectionId = (_a = sessionRef.current) === null || _a === void 0 ? void 0 : _a.sessionHelper.session.connection.connectionId;
                 var itsMe = (event === null || event === void 0 ? void 0 : event.from.connectionId) === myConnectionId;
@@ -602,6 +655,22 @@ var VideoSession = function (_a) {
                         text: eventData.text,
                     };
                 setMessages(function (m) { return __spreadArrays(m, [newMessage_1]); });
+                if (!chatOpen) {
+                    setChatOpen(true);
+                }
+            }
+            if ((event === null || event === void 0 ? void 0 : event.data) && (event === null || event === void 0 ? void 0 : event.type) === SIGNAL_TYPE_FILE) {
+                var eventData = JSON.parse(event === null || event === void 0 ? void 0 : event.data);
+                var myConnectionId = (_b = sessionRef.current) === null || _b === void 0 ? void 0 : _b.sessionHelper.session.connection.connectionId;
+                var itsMe = (event === null || event === void 0 ? void 0 : event.from.connectionId) === myConnectionId;
+                var newMessage_2 = itsMe
+                    ? { me: true, label: 'Eu', file: eventData.file }
+                    : {
+                        me: false,
+                        label: subscriberNameResolver(),
+                        file: eventData.file,
+                    };
+                setMessages(function (m) { return __spreadArrays(m, [newMessage_2]); });
                 if (!chatOpen) {
                     setChatOpen(true);
                 }
@@ -720,7 +789,7 @@ var VideoSession = function (_a) {
                 React.createElement(StreamPaciente, __assign({}, streamPacienteHandlers, { noDevice: noDevice, videoEnabled: videoPacienteEnabled(), onToggleVideo: onToggleVideo, audioEnabled: audioPacienteEnabled(), onToggleAudio: onToggleAudio, sharingScreen: videoSource === videoSources.SCREEN, nomePublisher: getPrimeiroNome(currentUserName, 10), videoSource: videoSource })),
                 !pictureInPictureEnabled && (React.createElement(React.Fragment, null,
                     React.createElement(BarraOpcoes, { chatOpen: chatOpen, onToggleChat: onToggleChat, sharingScreen: videoSource === videoSources.SCREEN, onToggleScreenSharing: onToggleScreenSharing, onEndCall: onMostrarConfirmacaoFinalizacao, disabled: termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento, isPictureInPictureEnabled: isPictureInPictureEnabled, onClickPictureInPicture: pictureInpictureRequest }),
-                    React.createElement(Chat, { open: chatOpen, messages: messages, onMessage: onSendMessage, disabled: !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento) })))))));
+                    React.createElement(Chat, { open: chatOpen, messages: messages, onMessage: onSendMessage, disabled: !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento), onSelectFileUpload: onSelectFileUpload })))))));
 };
 var templateObject_1$9;
 

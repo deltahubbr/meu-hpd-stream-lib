@@ -8,7 +8,7 @@ import ReactLoading from 'react-loading';
 
 import theme from '../../shared/theme';
 import Icone from '../Icone';
-import { ChatType } from './types';
+import { ChatType, MessageBoxType } from './types';
 import FileChatLink from '../FileChatLink';
 import FileUploader from '../FileUploader';
 import { onLoadProps } from '../FileUploader/types';
@@ -116,25 +116,16 @@ const EmptyText = styled.span`
   color: ${theme.colors.gray500};
 `;
 
-export default function Chat({ open, messages = [], disabled = false, onMessage, uploadFileEnabled = true}: ChatType) {
+export default function Chat({ open, messages = [], disabled = false, onMessage, uploadFileEnabled = true, onSelectFileUpload}: ChatType) {
   const messagesEndRef = useRef<any>();
   const [inputMessage, setInputMessage] = useState('');
   const [isUploadingFile, setIsUploadingFile] = useState(false);
-
-  const [fakeMessages, setFakeMessages] = useState<any>([
-    {
-      me: true,
-      text: 'Olá, testando',
-      label: 'Eu'
-    },
-  ]);
 
   disabled = false;
 
   const onSubmit = (evt: Event) => {
     evt.preventDefault();
-    // onMessage && onMessage(inputMessage);
-    setFakeMessages([...fakeMessages, {me: true, text: 'Mais um', label: 'Eu'}]);
+    onMessage && onMessage(inputMessage);
     setInputMessage('');
   };
 
@@ -142,25 +133,41 @@ export default function Chat({ open, messages = [], disabled = false, onMessage,
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, fakeMessages]);
+  }, [messages]);
 
-  const handleSelectFile = ({ extensao, file }: onLoadProps) => {
-
+  const handleSelectFile = async ({ nome, extensao, file }: onLoadProps) => {
 
     setIsUploadingFile(true);
-    const requestSimulator = setTimeout(() => {
-      setIsUploadingFile(false);
-      setFakeMessages([...fakeMessages, {
-        me: true,
-        file: <FileChatLink arquivo={{url: 'https://atendimento-dev.hpd.com.br/static/media/logo_hpd.61dd7b30.png', name: 'logo_hpd', extension: '.png'}}/> ,
-        label: 'Eu'
-      }])
-      clearTimeout(requestSimulator);
-    }, 3000);
+    onSelectFileUpload && await onSelectFileUpload({ nome, extensao, file })
+      .then((arquivos) => {
+        arquivos.forEach((arquivo) => {
+          onMessage && onMessage(arquivo);
+        })
+      })
+      .catch((err) => {
+        const error = err;
+      })
+      .finally(() => {
+        setIsUploadingFile(false);
+      });
   }
 
   const handleSelectFileError = (error) => {
     alert('ocorreu um erro');
+  }
+
+  const renderMessageBox = ({message, justify} : MessageBoxType) => {
+    const { url, nome } = message?.file || { url: '', nome: ''};
+
+    return message?.file ? (
+      <MessageBoxContent justify={justify}>
+        <FileChatLink arquivo={{url: url, name: nome, extension: nome.substr(nome.lastIndexOf('.'))}}/>
+      </MessageBoxContent>
+    ) : (
+      <MessageBoxContent justify={justify}>
+        {message.text}
+      </MessageBoxContent>
+    )
   }
 
   return (
@@ -169,18 +176,16 @@ export default function Chat({ open, messages = [], disabled = false, onMessage,
         <ChatHeadTitle>Chat</ChatHeadTitle>
       </ChatHead>
       <MessagesContainer>
-        {fakeMessages[0] && (
+        {hasMessages && (
           <MessagesContainerWrapper>
-            {map(fakeMessages, (message, index) => (
+            {map(messages, (message, index) => (
               <Fragment key={index}>
                 {message.me && (
                   <MessageBoxContainer>
                     <MessageBoxLabel align="right">
                       {message.label}
                     </MessageBoxLabel>
-                    <MessageBoxContent justify="flex-end">
-                      {message.file || message.text}
-                    </MessageBoxContent>
+                    {renderMessageBox({message, justify: 'flex-end'})}
                   </MessageBoxContainer>
                 )}
                 {!message.me && (
@@ -188,7 +193,7 @@ export default function Chat({ open, messages = [], disabled = false, onMessage,
                     <MessageBoxLabel align="left">
                       {message.label}
                     </MessageBoxLabel>
-                    <MessageBoxContent justify="flex-start">{message.file || message.text}</MessageBoxContent>
+                    {renderMessageBox({message, justify: 'flex-start'})}
                   </MessageBoxContainer>
                 )}
               </Fragment>
@@ -196,7 +201,7 @@ export default function Chat({ open, messages = [], disabled = false, onMessage,
             <div ref={messagesEndRef} />
           </MessagesContainerWrapper>
         )}
-        {!fakeMessages[0] && (
+        {!hasMessages && (
           <EmptyMessages>
             <Icone
               color={theme.colors.gray500}

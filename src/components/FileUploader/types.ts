@@ -1,4 +1,5 @@
 export interface onLoadProps {
+    nome: string,
     extensao: string,
     file?: string | ArrayBuffer | null
 }

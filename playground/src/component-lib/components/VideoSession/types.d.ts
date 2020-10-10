@@ -1,7 +1,9 @@
+import { onLoadProps } from "../FileUploader/types";
 export interface Message {
     me: boolean;
     label: string;
-    text: string;
+    text?: string;
+    file?: any;
 }
 export interface Chamada {
     idAtendimento: string;
@@ -23,4 +25,5 @@ export interface VideoSessionType {
     onClickVoltar?: (event: any) => void;
     isPictureInPictureEnabled?: boolean;
     onTogglePictureInPicture?: (value: boolean) => void;
+    onSelectFileUpload?: (param: onLoadProps) => Promise<any>;
 }

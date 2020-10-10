@@ -34,13 +34,13 @@ const FileChatLink: React.FC<FileUploaderType> = ({arquivo}) => {
   }
 
   return arquivo && (
-    <S.Container>
+    <S.Container href={arquivo.url} target="_blank">
       <Icone
         color={theme.colors.gray400}
         icone={iconTypeResolverr()}
         size="30px"
       />
-      <S.NomeArquivo>nome_do_arquivo.pdf</S.NomeArquivo>
+      <S.NomeArquivo>{arquivo.name}</S.NomeArquivo>
     </S.Container>
   ) || null;
 }

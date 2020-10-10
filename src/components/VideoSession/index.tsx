@@ -13,7 +13,8 @@ import {
   RECONNECTED,
   RECONNECTING,
   CONNECTION_DESTROYED,
-  SIGNAL_TYPE,
+  SIGNAL_TYPE_TEXT,
+  SIGNAL_TYPE_FILE,
   videoSources,
 } from '../../constants';
 
@@ -41,7 +42,7 @@ const ContainerTelemedicina = styled.div`
 `;
 
 
-const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = false, publisherType = 'paciente', chamadaEmAndamento, recusouTermo, onSessionEnded, getTokboxApiKey, currentUserName, appLog, onClickVoltar, termoObrigatorio }: VideoSessionType) => {
+const VideoSession = ({ onSelectFileUpload, onTogglePictureInPicture, isPictureInPictureEnabled = false, publisherType = 'paciente', chamadaEmAndamento, recusouTermo, onSessionEnded, getTokboxApiKey, currentUserName, appLog, onClickVoltar, termoObrigatorio }: VideoSessionType) => {
   const sessionRef = useRef<any>();
   const [sessionStatus, setSessionStatus] = useState<String | undefined>();
   const [mensagemErro, setMensagemErro] = useState('');
@@ -92,11 +93,12 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
     return publisherType === 'paciente';
   }
 
-  const onSendMessage = (msg: String) => {
+  const onSendMessage = (msg: string | Object) => {
+    const isTextType = typeof msg === 'string';
     sessionRef.current?.sessionHelper.session.signal({
-      type: 'text-chat',
+      type: isTextType ? 'text-chat' : 'file-chat',
       data: JSON.stringify({
-        text: msg,
+        ...(isTextType ? {text: msg} : {file: JSON.stringify(msg)}),
         sender: {
           alias: getPrimeiroNome(publisherIsPaciente() ? currentUserName : chamadaEmAndamento.subscriberName),
         },
@@ -229,7 +231,8 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
     signal: (event: SignalEvent) => {
       appLog && appLog('<OTSession /> signal', event);
 
-      if (event?.data && event?.type === SIGNAL_TYPE) {
+      if (event?.data && event?.type === SIGNAL_TYPE_TEXT) {
+        'file-chat'
         const eventData = JSON.parse(event?.data);
         const myConnectionId =
           sessionRef.current?.sessionHelper.session.connection.connectionId;
@@ -241,6 +244,27 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
             me: false,
             label: subscriberNameResolver(),
             text: eventData.text,
+          };
+
+        setMessages((m) => [...m, newMessage]);
+
+        if (!chatOpen) {
+          setChatOpen(true);
+        }
+      }
+
+      if (event?.data && event?.type === SIGNAL_TYPE_FILE) {
+        const eventData = JSON.parse(event?.data);
+        const myConnectionId =
+          sessionRef.current?.sessionHelper.session.connection.connectionId;
+        const itsMe = event?.from.connectionId === myConnectionId;
+
+        const newMessage = itsMe
+          ? { me: true, label: 'Eu', file: eventData.file }
+          : {
+            me: false,
+            label: subscriberNameResolver(),
+            file: eventData.file,
           };
 
         setMessages((m) => [...m, newMessage]);
@@ -432,6 +456,7 @@ const VideoSession = ({ onTogglePictureInPicture, isPictureInPictureEnabled = fa
                 disabled={
                   !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento)
                 }
+                onSelectFileUpload={onSelectFileUpload}
               />
             </>
           )}
