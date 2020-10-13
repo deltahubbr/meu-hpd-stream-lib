@@ -369,7 +369,7 @@ var EmptyMessages = styled__default['default'].div(templateObject_11 || (templat
 var EmptyText = styled__default['default'].span(templateObject_12 || (templateObject_12 = __makeTemplateObject(["\n  margin-top: 15px;\n  font-size: 10pt;\n  color: ", ";\n"], ["\n  margin-top: 15px;\n  font-size: 10pt;\n  color: ", ";\n"])), theme.colors.gray500);
 function Chat(_a) {
     var _this = this;
-    var open = _a.open, _b = _a.messages, messages = _b === void 0 ? [] : _b, _c = _a.disabled, disabled = _c === void 0 ? false : _c, onMessage = _a.onMessage, _d = _a.uploadFileEnabled, uploadFileEnabled = _d === void 0 ? true : _d, onSelectFileUpload = _a.onSelectFileUpload;
+    var open = _a.open, _b = _a.messages, messages = _b === void 0 ? [] : _b, _c = _a.disabled, disabled = _c === void 0 ? false : _c, onMessage = _a.onMessage, _d = _a.uploadDisabled, uploadDisabled = _d === void 0 ? false : _d, onSelectFileUpload = _a.onSelectFileUpload;
     var messagesEndRef = React.useRef();
     var _e = React.useState(''), inputMessage = _e[0], setInputMessage = _e[1];
     var _f = React.useState(false), isUploadingFile = _f[0], setIsUploadingFile = _f[1];
@@ -441,8 +441,8 @@ function Chat(_a) {
                 React__default['default'].createElement(EmptyText, null, "Nenhuma mensagem encontrada")))),
         React__default['default'].createElement(InputContainer, null,
             React__default['default'].createElement(CustomForm, { onSubmit: onSubmit },
-                uploadFileEnabled && (React__default['default'].createElement(FileUploader, { onLoad: handleSelectFile, onError: handleSelectFileError, isLoading: isUploadingFile })),
-                React__default['default'].createElement(reactstrap.Input, { style: { paddingLeft: uploadFileEnabled ? '2rem' : '0.75rem' }, type: "text", placeholder: isUploadingFile ? 'Enviando arquivo...' : 'Digite a mensagem', value: inputMessage, onChange: function (evt) { return setInputMessage(evt.target.value); }, maxLength: 160, disabled: disabled }),
+                !uploadDisabled && (React__default['default'].createElement(FileUploader, { onLoad: handleSelectFile, onError: handleSelectFileError, isLoading: isUploadingFile })),
+                React__default['default'].createElement(reactstrap.Input, { style: { paddingLeft: !uploadDisabled ? '2rem' : '0.75rem' }, type: "text", placeholder: isUploadingFile ? 'Enviando arquivo...' : 'Digite a mensagem', value: inputMessage, onChange: function (evt) { return setInputMessage(evt.target.value); }, maxLength: 160, disabled: disabled }),
                 React__default['default'].createElement(reactstrap.Button, { title: "Enviar", type: "submit", disabled: disabled }, "Enviar")))));
 }
 var templateObject_1$5, templateObject_2$4, templateObject_3$1, templateObject_4, templateObject_5, templateObject_6, templateObject_7, templateObject_8, templateObject_9, templateObject_10, templateObject_11, templateObject_12;
@@ -509,9 +509,12 @@ function CardErro(_a) {
 }
 var templateObject_1$8, templateObject_2$6;
 
-var ContainerTelemedicina = styled__default['default'].div(templateObject_1$9 || (templateObject_1$9 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"], ["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n"])), theme.colors.gray50);
+const version="1.1.1";
+
+var ContainerTelemedicina = styled__default['default'].div(templateObject_1$9 || (templateObject_1$9 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n  position: relative;\n"], ["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n  position: relative;\n"])), theme.colors.gray50);
+var TagVersion = styled__default['default'].span(templateObject_2$7 || (templateObject_2$7 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  padding: 10px;\n  font-size: 12px;\n  color: rgba(255,255,255,0.3);\n"], ["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  padding: 10px;\n  font-size: 12px;\n  color: rgba(255,255,255,0.3);\n"])));
 var VideoSession = function (_a) {
-    var onSelectFileUpload = _a.onSelectFileUpload, onTogglePictureInPicture = _a.onTogglePictureInPicture, _b = _a.isPictureInPictureEnabled, isPictureInPictureEnabled = _b === void 0 ? false : _b, _c = _a.publisherType, publisherType = _c === void 0 ? 'paciente' : _c, chamadaEmAndamento = _a.chamadaEmAndamento, recusouTermo = _a.recusouTermo, onSessionEnded = _a.onSessionEnded, getTokboxApiKey = _a.getTokboxApiKey, currentUserName = _a.currentUserName, appLog = _a.appLog, onClickVoltar = _a.onClickVoltar, termoObrigatorio = _a.termoObrigatorio;
+    var uploadDisabled = _a.uploadDisabled, onSelectFileUpload = _a.onSelectFileUpload, onTogglePictureInPicture = _a.onTogglePictureInPicture, _b = _a.isPictureInPictureEnabled, isPictureInPictureEnabled = _b === void 0 ? false : _b, _c = _a.publisherType, publisherType = _c === void 0 ? 'paciente' : _c, chamadaEmAndamento = _a.chamadaEmAndamento, recusouTermo = _a.recusouTermo, onSessionEnded = _a.onSessionEnded, getTokboxApiKey = _a.getTokboxApiKey, currentUserName = _a.currentUserName, appLog = _a.appLog, onClickVoltar = _a.onClickVoltar, termoObrigatorio = _a.termoObrigatorio;
     var sessionRef = React.useRef();
     var _d = React.useState(), sessionStatus = _d[0], setSessionStatus = _d[1];
     var _e = React.useState(''), mensagemErro = _e[0], setMensagemErro = _e[1];
@@ -797,8 +800,9 @@ var VideoSession = function (_a) {
                 React__default['default'].createElement(StreamPaciente, __assign({}, streamPacienteHandlers, { noDevice: noDevice, videoEnabled: videoPacienteEnabled(), onToggleVideo: onToggleVideo, audioEnabled: audioPacienteEnabled(), onToggleAudio: onToggleAudio, sharingScreen: videoSource === videoSources.SCREEN, nomePublisher: getPrimeiroNome(currentUserName, 10), videoSource: videoSource })),
                 !pictureInPictureEnabled && (React__default['default'].createElement(React__default['default'].Fragment, null,
                     React__default['default'].createElement(BarraOpcoes, { chatOpen: chatOpen, onToggleChat: onToggleChat, sharingScreen: videoSource === videoSources.SCREEN, onToggleScreenSharing: onToggleScreenSharing, onEndCall: onMostrarConfirmacaoFinalizacao, disabled: termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento, isPictureInPictureEnabled: isPictureInPictureEnabled, onClickPictureInPicture: pictureInpictureRequest }),
-                    React__default['default'].createElement(Chat, { open: chatOpen, messages: messages, onMessage: onSendMessage, disabled: !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento), onSelectFileUpload: onSelectFileUpload })))))));
+                    React__default['default'].createElement(Chat, { open: chatOpen, messages: messages, onMessage: onSendMessage, disabled: !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento), onSelectFileUpload: onSelectFileUpload, uploadDisabled: uploadDisabled })))),
+            React__default['default'].createElement(TagVersion, null, "v" + version))));
 };
-var templateObject_1$9;
+var templateObject_1$9, templateObject_2$7;
 
 module.exports = VideoSession;

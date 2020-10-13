@@ -116,7 +116,7 @@ const EmptyText = styled.span`
   color: ${theme.colors.gray500};
 `;
 
-export default function Chat({ open, messages = [], disabled = false, onMessage, uploadFileEnabled = true, onSelectFileUpload}: ChatType) {
+export default function Chat({ open, messages = [], disabled = false, onMessage, uploadDisabled = false, onSelectFileUpload}: ChatType) {
   const messagesEndRef = useRef<any>();
   const [inputMessage, setInputMessage] = useState('');
   const [isUploadingFile, setIsUploadingFile] = useState(false);
@@ -214,11 +214,11 @@ export default function Chat({ open, messages = [], disabled = false, onMessage,
       </MessagesContainer>
       <InputContainer>
         <CustomForm onSubmit={onSubmit}>
-          {uploadFileEnabled && (
+          {!uploadDisabled && (
             <FileUploader onLoad={handleSelectFile} onError={handleSelectFileError} isLoading={isUploadingFile}/>
           )}
           <Input
-            style={{paddingLeft: uploadFileEnabled ? '2rem' : '0.75rem'}}
+            style={{paddingLeft: !uploadDisabled ? '2rem' : '0.75rem'}}
             type="text"
             placeholder={isUploadingFile ? 'Enviando arquivo...' : 'Digite a mensagem'}
             value={inputMessage}

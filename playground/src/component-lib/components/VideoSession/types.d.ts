@@ -14,6 +14,7 @@ export interface Chamada {
     aceitouTermoComparecimento?: boolean;
 }
 export interface VideoSessionType {
+    uploadDisabled?: boolean;
     publisherType: 'medico' | 'paciente';
     chamadaEmAndamento: Chamada;
     recusouTermo?: boolean;

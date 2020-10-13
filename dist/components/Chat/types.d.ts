@@ -5,7 +5,7 @@ export interface ChatType {
     messages: Message[];
     disabled?: boolean;
     onMessage?: (inputMessage: string) => void;
-    uploadFileEnabled?: boolean;
+    uploadDisabled?: boolean;
     onSelectFileUpload?: (param: onLoadProps) => Promise<any>;
 }
 export interface MessageBoxType {

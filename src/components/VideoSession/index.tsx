@@ -35,14 +35,26 @@ import BarraOpcoes from '../BarraOpcoes';
 import ConfirmationModal from '../ConfirmationModal';
 import CardErro from '../CardErro';
 
+import { version } from  '../../../package.json';
+
 const ContainerTelemedicina = styled.div`
   height: 100vh;
   width: 100vw;
   background-color: ${theme.colors.gray50};
+  position: relative;
+`;
+
+const TagVersion = styled.span`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
 `;
 
 
-const VideoSession = ({ onSelectFileUpload, onTogglePictureInPicture, isPictureInPictureEnabled = false, publisherType = 'paciente', chamadaEmAndamento, recusouTermo, onSessionEnded, getTokboxApiKey, currentUserName, appLog, onClickVoltar, termoObrigatorio }: VideoSessionType) => {
+const VideoSession = ({ uploadDisabled, onSelectFileUpload, onTogglePictureInPicture, isPictureInPictureEnabled = false, publisherType = 'paciente', chamadaEmAndamento, recusouTermo, onSessionEnded, getTokboxApiKey, currentUserName, appLog, onClickVoltar, termoObrigatorio }: VideoSessionType) => {
   const sessionRef = useRef<any>();
   const [sessionStatus, setSessionStatus] = useState<String | undefined>();
   const [mensagemErro, setMensagemErro] = useState('');
@@ -457,10 +469,12 @@ const VideoSession = ({ onSelectFileUpload, onTogglePictureInPicture, isPictureI
                   !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento)
                 }
                 onSelectFileUpload={onSelectFileUpload}
+                uploadDisabled={uploadDisabled}
               />
             </>
           )}
         </Wrapper>
+        <TagVersion>{`v${version}`}</TagVersion>
       </ContainerTelemedicina>
     </>
   );
