@@ -22,7 +22,8 @@ const FileUploader: React.FC<FileUploader> = ({disabled,  onLoad, onError, isLoa
         const nome = e.target.files[0].name;
 
         reader.onload = function (evt) {
-          onLoad({ nome, extensao: ext, file: evt?.target?.result });
+          const file = evt?.target?.result
+          onLoad({ nome, extensao: ext, file: typeof file === 'string' ? file.split(',')[1] : file  });
         };
 
         reader.readAsDataURL(e.target.files[0]); // convert to base64 string

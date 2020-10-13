@@ -30,7 +30,7 @@ const FileChatLink: React.FC<FileUploaderType> = ({arquivo}) => {
   ];
 
   const iconTypeResolverr = () => {
-    return find(extIcons, (types) => some(types.ext, (ext) => ext === arquivo?.extension))?.icon
+    return find(extIcons, (types) => some(types.ext, (ext) => ext.toLowerCase() === arquivo?.extension.toLowerCase()))?.icon
   }
 
   return arquivo && (

@@ -299,7 +299,7 @@ var FileChatLink = function (_a) {
     ];
     var iconTypeResolverr = function () {
         var _a;
-        return (_a = find(extIcons, function (types) { return some(types.ext, function (ext) { return ext === (arquivo === null || arquivo === void 0 ? void 0 : arquivo.extension); }); })) === null || _a === void 0 ? void 0 : _a.icon;
+        return (_a = find(extIcons, function (types) { return some(types.ext, function (ext) { return ext.toLowerCase() === (arquivo === null || arquivo === void 0 ? void 0 : arquivo.extension.toLowerCase()); }); })) === null || _a === void 0 ? void 0 : _a.icon;
     };
     return arquivo && (React.createElement(Container, { href: arquivo.url, target: "_blank" },
         React.createElement(Icone, { color: theme.colors.gray400, icone: iconTypeResolverr(), size: "30px" }),
@@ -324,7 +324,8 @@ var FileUploader = function (_a) {
                 var nome_1 = e.target.files[0].name;
                 reader.onload = function (evt) {
                     var _a;
-                    onLoad({ nome: nome_1, extensao: ext_1, file: (_a = evt === null || evt === void 0 ? void 0 : evt.target) === null || _a === void 0 ? void 0 : _a.result });
+                    var file = (_a = evt === null || evt === void 0 ? void 0 : evt.target) === null || _a === void 0 ? void 0 : _a.result;
+                    onLoad({ nome: nome_1, extensao: ext_1, file: typeof file === 'string' ? file.split(',')[1] : file });
                 };
                 reader.readAsDataURL(e.target.files[0]); // convert to base64 string
             }
