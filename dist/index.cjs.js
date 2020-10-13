@@ -357,7 +357,7 @@ var MessagesContainer = styled__default['default'].div(templateObject_4 || (temp
 var MessagesContainerWrapper = styled__default['default'].div(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n  width: 100%;\n  max-height: 220px;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  padding: 5px;\n"], ["\n  width: 100%;\n  max-height: 220px;\n  overflow-x: hidden;\n  overflow-y: scroll;\n  padding: 5px;\n"])));
 var InputContainer = styled__default['default'].div(templateObject_6 || (templateObject_6 = __makeTemplateObject(["\n  width: 100%;\n  display: flex;\n"], ["\n  width: 100%;\n  display: flex;\n"])));
 var CustomForm = styled__default['default'](reactstrap.Form)(templateObject_7 || (templateObject_7 = __makeTemplateObject(["\n  flex: 1;\n  display: flex;\n  position: relative;\n"], ["\n  flex: 1;\n  display: flex;\n  position: relative;\n"])));
-var MessageBoxContainer = styled__default['default'].div(templateObject_8 || (templateObject_8 = __makeTemplateObject(["\n  margin-bottom: 20px;\n"], ["\n  margin-bottom: 20px;\n"])));
+var MessageBoxContainer = styled__default['default'].div(templateObject_8 || (templateObject_8 = __makeTemplateObject(["\n  margin-bottom: 20px;\n  padding: 0px 10px;\n"], ["\n  margin-bottom: 20px;\n  padding: 0px 10px;\n"])));
 var MessageLabel = styled__default['default'].div(templateObject_9 || (templateObject_9 = __makeTemplateObject(["\n  text-align: ", ";\n"], ["\n  text-align: ", ";\n"])), function (props) { return props.align || 'right'; });
 var MessageBoxLabel = function (_a) {
     var _b = _a.align, align = _b === void 0 ? 'right' : _b, _c = _a.children, children = _c === void 0 ? '' : _c;
@@ -509,7 +509,7 @@ function CardErro(_a) {
 }
 var templateObject_1$8, templateObject_2$6;
 
-const version="1.1.2";
+const version="1.1.3";
 
 var ContainerTelemedicina = styled__default['default'].div(templateObject_1$9 || (templateObject_1$9 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n  position: relative;\n"], ["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n  position: relative;\n"])), theme.colors.gray50);
 var TagVersion = styled__default['default'].span(templateObject_2$7 || (templateObject_2$7 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  padding: 10px;\n  font-size: 12px;\n  color: rgba(255,255,255,0.3);\n"], ["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  padding: 10px;\n  font-size: 12px;\n  color: rgba(255,255,255,0.3);\n"])));

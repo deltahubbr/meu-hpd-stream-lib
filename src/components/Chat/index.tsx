@@ -84,6 +84,7 @@ const CustomForm = styled(Form)`
 
 const MessageBoxContainer = styled.div`
   margin-bottom: 20px;
+  padding: 0px 10px;
 `;
 
 const MessageLabel = styled.div`
