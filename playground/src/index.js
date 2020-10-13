@@ -21,6 +21,10 @@ const chamada = {
   aceitouTermoComparecimento: true,
 }
 
+/**
+ * TODO: IMPLEMENTAR NO MEU HPD WEB O SERVIÇO uploadFileService
+ */
+
 ReactDOM.render(
   <React.StrictMode>
     <VideoSession
