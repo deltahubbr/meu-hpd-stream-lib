@@ -267,16 +267,17 @@ const VideoSession = ({ uploadDisabled, onSelectFileUpload, onTogglePictureInPic
 
       if (event?.data && event?.type === SIGNAL_TYPE_FILE) {
         const eventData = JSON.parse(event?.data);
+        const file = JSON.parse(eventData?.file);
         const myConnectionId =
           sessionRef.current?.sessionHelper.session.connection.connectionId;
         const itsMe = event?.from.connectionId === myConnectionId;
 
         const newMessage = itsMe
-          ? { me: true, label: 'Eu', file: eventData.file }
+          ? { me: true, label: 'Eu', file }
           : {
             me: false,
             label: subscriberNameResolver(),
-            file: eventData.file,
+            file,
           };
 
         setMessages((m) => [...m, newMessage]);

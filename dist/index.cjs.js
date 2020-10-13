@@ -509,7 +509,7 @@ function CardErro(_a) {
 }
 var templateObject_1$8, templateObject_2$6;
 
-const version="1.1.1";
+const version="1.1.2";
 
 var ContainerTelemedicina = styled__default['default'].div(templateObject_1$9 || (templateObject_1$9 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n  position: relative;\n"], ["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n  position: relative;\n"])), theme.colors.gray50);
 var TagVersion = styled__default['default'].span(templateObject_2$7 || (templateObject_2$7 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  padding: 10px;\n  font-size: 12px;\n  color: rgba(255,255,255,0.3);\n"], ["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  padding: 10px;\n  font-size: 12px;\n  color: rgba(255,255,255,0.3);\n"])));
@@ -672,14 +672,15 @@ var VideoSession = function (_a) {
             }
             if ((event === null || event === void 0 ? void 0 : event.data) && (event === null || event === void 0 ? void 0 : event.type) === SIGNAL_TYPE_FILE) {
                 var eventData = JSON.parse(event === null || event === void 0 ? void 0 : event.data);
+                var file = JSON.parse(eventData === null || eventData === void 0 ? void 0 : eventData.file);
                 var myConnectionId = (_b = sessionRef.current) === null || _b === void 0 ? void 0 : _b.sessionHelper.session.connection.connectionId;
                 var itsMe = (event === null || event === void 0 ? void 0 : event.from.connectionId) === myConnectionId;
                 var newMessage_2 = itsMe
-                    ? { me: true, label: 'Eu', file: eventData.file }
+                    ? { me: true, label: 'Eu', file: file }
                     : {
                         me: false,
                         label: subscriberNameResolver(),
-                        file: eventData.file,
+                        file: file,
                     };
                 setMessages(function (m) { return __spreadArrays(m, [newMessage_2]); });
                 if (!chatOpen) {
