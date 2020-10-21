@@ -293,7 +293,7 @@ const VideoSession = ({ uploadDisabled, onSelectFileUpload, onTogglePictureInPic
     const element = document.querySelector('div.OT_video-poster');
 
     if (element) {
-      element.setAttribute('style', "z-index: 0; display: block !important");
+      element.setAttribute('style', "z-index: 0; display: block !important;");
     }
   }
 
