@@ -289,6 +289,14 @@ const VideoSession = ({ uploadDisabled, onSelectFileUpload, onTogglePictureInPic
     },
   };
 
+  const handleOTVideoPoster = () => {
+    const element = document.querySelector('div.OT_video-poster');
+
+    if (element) {
+      element.setAttribute('style', "z-index: 0;");
+    }
+  }
+
   const streamMedicoHandlers = {
     onSubscribe: () => {
       appLog && appLog(`<OTSubscriber /> onSubscribe`);
@@ -410,6 +418,7 @@ const VideoSession = ({ uploadDisabled, onSelectFileUpload, onTogglePictureInPic
     }
   }
 
+  handleOTVideoPoster();
   const Wrapper: any = OTSessionWrapper;
   return (
     <>
