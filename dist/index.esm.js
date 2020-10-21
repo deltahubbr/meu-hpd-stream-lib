@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect, Fragment, useCallback } from 'react';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Severity, addBreadcrumb, captureException as captureException$1 } from '@sentry/react';
 import { OTStreams, OTSubscriber, OTPublisher, OTSession } from 'opentok-react';
 import { Form, Input, Button, UncontrolledTooltip, Modal, Card, CardText } from 'reactstrap';
@@ -502,7 +502,7 @@ function CardErro(_a) {
 }
 var templateObject_1$8, templateObject_2$6;
 
-const version="1.1.7";
+const version="1.1.8";
 
 var ContainerTelemedicina = styled.div(templateObject_1$9 || (templateObject_1$9 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n  position: relative;\n"], ["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n  position: relative;\n"])), theme.colors.gray50);
 var TagVersion = styled.span(templateObject_2$7 || (templateObject_2$7 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  padding: 10px;\n  font-size: 12px;\n  color: rgba(255,255,255,0.3);\n"], ["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  padding: 10px;\n  font-size: 12px;\n  color: rgba(255,255,255,0.3);\n"])));
@@ -682,12 +682,6 @@ var VideoSession = function (_a) {
             }
         },
     };
-    var handleOTVideoPoster = function () {
-        var element = document.querySelector('div.OT_video-poster');
-        if (element) {
-            element.setAttribute('style', "z-index: 0;");
-        }
-    };
     var streamMedicoHandlers = {
         onSubscribe: function () {
             appLog && appLog("<OTSubscriber /> onSubscribe");
@@ -789,9 +783,10 @@ var VideoSession = function (_a) {
             });
         }
     };
-    handleOTVideoPoster();
+    var GlobalStyle = createGlobalStyle(templateObject_3$2 || (templateObject_3$2 = __makeTemplateObject(["\n    div.OT_video-poster {\n      z-index: 0;\n      display: block !important;\n    }\n  "], ["\n    div.OT_video-poster {\n      z-index: 0;\n      display: block !important;\n    }\n  "])));
     var Wrapper = OTSession;
     return (React.createElement(React.Fragment, null,
+        React.createElement(GlobalStyle, null),
         React.createElement(ConfirmationModal, { title: "Finalizar", isOpen: mostrarConfirmacaoFinalizacao, onCancelar: function () {
                 setMostrarConfirmacaoFinalizacao(false);
             }, onConfirmar: onEndCall, toggleModal: function () { return null; } }, "Deseja realmente finalizar a chamada?"),
@@ -804,6 +799,6 @@ var VideoSession = function (_a) {
                     React.createElement(Chat, { open: chatOpen, messages: messages, onMessage: onSendMessage, disabled: !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento), onSelectFileUpload: onSelectFileUpload, uploadDisabled: uploadDisabled })))),
             React.createElement(TagVersion, null, "v" + version))));
 };
-var templateObject_1$9, templateObject_2$7;
+var templateObject_1$9, templateObject_2$7, templateObject_3$2;
 
 export default VideoSession;

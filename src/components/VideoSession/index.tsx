@@ -3,7 +3,7 @@
 /* eslint-disable react/jsx-closing-tag-location */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from 'react';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import * as Sentry from '@sentry/react';
 import { Error, SessionEventHandlers, SignalEvent } from 'opentok-react/types/opentok';
 
@@ -289,14 +289,6 @@ const VideoSession = ({ uploadDisabled, onSelectFileUpload, onTogglePictureInPic
     },
   };
 
-  const handleOTVideoPoster = () => {
-    const element = document.querySelector('div.OT_video-poster');
-
-    if (element) {
-      element.setAttribute('style', "z-index: 0; display: block !important;");
-    }
-  }
-
   const streamMedicoHandlers = {
     onSubscribe: () => {
       appLog && appLog(`<OTSubscriber /> onSubscribe`);
@@ -418,10 +410,17 @@ const VideoSession = ({ uploadDisabled, onSelectFileUpload, onTogglePictureInPic
     }
   }
 
-  handleOTVideoPoster();
+  const GlobalStyle = createGlobalStyle`
+    div.OT_video-poster {
+      z-index: 0;
+      display: block !important;
+    }
+  `;
+
   const Wrapper: any = OTSessionWrapper;
   return (
     <>
+      <GlobalStyle />
       <ConfirmationModal
         title="Finalizar"
         isOpen={mostrarConfirmacaoFinalizacao}
