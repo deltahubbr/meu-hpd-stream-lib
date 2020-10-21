@@ -20,6 +20,10 @@ const ContainerStreamPaciente = styled.div`
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
+
+  & div.OT_video-poster {
+    z-index: 0;
+  }
 `;
 
 const ContainerCameraPaciente = styled.div`
