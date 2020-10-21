@@ -13,13 +13,9 @@ const BarraOpcoesContainer = styled.div`
   width: 100vw;
   height: 75px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   padding-left: 15px;
-  @media screen and (min-width: ${theme.breakpoints.lg}) {
-    justify-content: center;
-    align-items: center;
-  }
 `;
 
 const OpcoesContainer = styled.div`

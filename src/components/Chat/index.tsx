@@ -31,6 +31,12 @@ const ChatContainer = styled.div`
   -moz-border-radius-bottomright: 5px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+  @media screen and (max-width: ${theme.breakpoints.sm}) {
+    width: 98%;
+    margin: 1%;
+    right: 0;
+    bottom: 75px;
+  }
 `;
 
 const ChatHead = styled.div`
