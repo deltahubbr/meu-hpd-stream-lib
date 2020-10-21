@@ -212,7 +212,7 @@ function Controles(_a) {
 }
 var templateObject_1$1, templateObject_2;
 
-var ContainerStreamPaciente = styled.div(templateObject_1$2 || (templateObject_1$2 = __makeTemplateObject(["\n  position: absolute;\n  top: 60px;\n  right: 45px;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-around;\n  align-items: center;\n"], ["\n  position: absolute;\n  top: 60px;\n  right: 45px;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-around;\n  align-items: center;\n"])));
+var ContainerStreamPaciente = styled.div(templateObject_1$2 || (templateObject_1$2 = __makeTemplateObject(["\n  position: absolute;\n  top: 60px;\n  right: 45px;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-around;\n  align-items: center;\n\n  & div.OT_video-poster {\n    z-index: 0;\n  }\n"], ["\n  position: absolute;\n  top: 60px;\n  right: 45px;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-around;\n  align-items: center;\n\n  & div.OT_video-poster {\n    z-index: 0;\n  }\n"])));
 var ContainerCameraPaciente = styled.div(templateObject_2$1 || (templateObject_2$1 = __makeTemplateObject(["\n  width: 140px;\n  height: 105px;\n  border-radius: 10px;\n  border: 1pt solid ", ";\n  overflow: hidden;\n  margin-bottom: 10px;\n  background-color: ", ";\n  @media screen and (min-width: ", ") {\n    width: 180px;\n    height: 145px;\n  }\n"], ["\n  width: 140px;\n  height: 105px;\n  border-radius: 10px;\n  border: 1pt solid ", ";\n  overflow: hidden;\n  margin-bottom: 10px;\n  background-color: ",
     ";\n  @media screen and (min-width: ", ") {\n    width: 180px;\n    height: 145px;\n  }\n"])), theme.colors.yellow400, function (props) {
     return props.noDevice ? theme.colors.gray700 : 'transparent';
@@ -503,7 +503,7 @@ function CardErro(_a) {
 }
 var templateObject_1$8, templateObject_2$6;
 
-const version="1.1.5";
+const version="1.1.7";
 
 var ContainerTelemedicina = styled.div(templateObject_1$9 || (templateObject_1$9 = __makeTemplateObject(["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n  position: relative;\n"], ["\n  height: 100vh;\n  width: 100vw;\n  background-color: ", ";\n  position: relative;\n"])), theme.colors.gray50);
 var TagVersion = styled.span(templateObject_2$7 || (templateObject_2$7 = __makeTemplateObject(["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  padding: 10px;\n  font-size: 12px;\n  color: rgba(255,255,255,0.3);\n"], ["\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  padding: 10px;\n  font-size: 12px;\n  color: rgba(255,255,255,0.3);\n"])));
@@ -683,6 +683,12 @@ var VideoSession = function (_a) {
             }
         },
     };
+    var handleOTVideoPoster = function () {
+        var element = document.querySelector('div.OT_video-poster');
+        if (element) {
+            element.setAttribute('style', "z-index: 0;");
+        }
+    };
     var streamMedicoHandlers = {
         onSubscribe: function () {
             appLog && appLog("<OTSubscriber /> onSubscribe");
@@ -784,6 +790,7 @@ var VideoSession = function (_a) {
             });
         }
     };
+    handleOTVideoPoster();
     var Wrapper = OTSession;
     return (React.createElement(React.Fragment, null,
         React.createElement(ConfirmationModal, { title: "Finalizar", isOpen: mostrarConfirmacaoFinalizacao, onCancelar: function () {
