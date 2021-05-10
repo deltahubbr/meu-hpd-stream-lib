@@ -25,19 +25,51 @@ export default function StreamMedico({
   onSubscribeError,
   onVideoEnabled,
   onVideoDisabled,
+  pictureInPictureEnabled,
+  appLog
 }: StreamMedicoType) {
+
   const subscriberEventHandlers: SubscriberEventHandlers = {
     videoEnabled: (event) => {
+      appLog && appLog('subscriberEvent: videoEnabled', event);
       onVideoEnabled && onVideoEnabled(event);
     },
     videoDisabled: (event) => {
+      appLog && appLog('subscriberEvent: videoDisabled', event);
       onVideoDisabled && onVideoDisabled(event);
+    },
+    audioBlocked: (event) => {
+      appLog && appLog('subscriberEvent: audioBlocked', event);
+    },
+    audioLevelUpdated: (event) => {
+      appLog && appLog('subscriberEvent: audioLevelUpdated', event);
+    },
+    connected: (event) => {
+      appLog && appLog('subscriberEvent: connected', event);
+    },
+    destroyed: (event) => {
+      appLog && appLog('subscriberEvent: destroyed', event);
+    },
+    disconnected: (event) => {
+      appLog && appLog('subscriberEvent: disconnected', event);
+    },
+    videoDimensionsChanged: (event) => {
+      appLog && appLog('subscriberEvent: videoDimensionsChanged', event);
+    },
+    videoDisableWarning: (event) => {
+      appLog && appLog('subscriberEvent: videoDisableWarning', event);
+    },
+    videoDisableWarningLifted: (event) => {
+      appLog && appLog('subscriberEvent: videoDisableWarningLifted', event);
+    },
+    videoElementCreated: (event) => {
+      appLog && appLog('subscriberEvent: videoElementCreated', event);
     },
   };
 
   const Wrapper: any = OTSubscriberWrapper;
   return (
-    <StreamContainer id="stream-medico">
+    <StreamContainer id="stream-medico" hidden={pictureInPictureEnabled}>
       <OTStreams>
         <Wrapper
           retry

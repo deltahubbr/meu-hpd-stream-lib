@@ -1,5 +1,6 @@
 /// <reference types="react" />
 import { Error, Event, MediaStoppedEvent, StreamCreatedEvent } from "opentok-react/types/opentok";
+import { AppLog } from "../VideoSession/types";
 export interface StreamPacienteType {
     nomePublisher?: string;
     noDevice: boolean;
@@ -15,4 +16,6 @@ export interface StreamPacienteType {
     onStreamCreated?: (event: StreamCreatedEvent) => void;
     onStreamDestroyed?: (event: string) => void;
     onMediaStopped?: (event: MediaStoppedEvent) => void;
+    pictureInPictureEnabled?: boolean;
+    appLog?: AppLog;
 }

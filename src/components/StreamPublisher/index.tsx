@@ -69,19 +69,41 @@ export default function StreamPaciente({
   onStreamCreated,
   onStreamDestroyed,
   onMediaStopped,
+
+  pictureInPictureEnabled,
+  appLog
 }: StreamPacienteType) {
   const publisherEventHandlers: PublisherEventHandlers = {
     accessDenied: (event) => {
+      appLog && appLog('publisherEvent: accessDenied', event)
       onAccessDenied && onAccessDenied(event);
     },
     streamCreated: (event) => {
+      appLog && appLog('publisherEvent: streamCreated', event)
       onStreamCreated && onStreamCreated(event);
     },
-    streamDestroyed: ({ reason }) => {
-      onStreamDestroyed && onStreamDestroyed(reason);
+    streamDestroyed: (event) => {
+      appLog && appLog('publisherEvent: streamDestroyed', event)
+      onStreamDestroyed && onStreamDestroyed(event.reason);
     },
-    mediaStopped: (e) => {
-      onMediaStopped && onMediaStopped(e);
+    mediaStopped: (event) => {
+      appLog && appLog('publisherEvent: mediaStopped', event)
+      onMediaStopped && onMediaStopped(event);
+    },
+    accessAllowed: (event) => {
+      appLog && appLog('publisherEvent: accessAllowed', event)
+    },
+    accessDialogClosed: (event) => {
+      appLog && appLog('publisherEvent: accessDialogClosed', event)
+    },
+    accessDialogOpened: (event) => {
+      appLog && appLog('publisherEvent: accessDialogOpened', event)
+    },
+    audioLevelUpdated: (event) => {
+      appLog && appLog('publisherEvent: audioLevelUpdated', event)
+    },
+    videoDimensionsChanged: (event) => {
+      appLog && appLog('publisherEvent: videoDimensionsChanged', event)
     },
   };
 
@@ -109,7 +131,7 @@ export default function StreamPaciente({
   );
 
   return (
-    <ContainerStreamPaciente>
+    <ContainerStreamPaciente hidden={pictureInPictureEnabled}>
       <ContainerCameraPaciente noDevice={noDevice}>
         <OTPublisher
           properties={publisherProperties}

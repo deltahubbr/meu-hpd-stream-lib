@@ -16,6 +16,7 @@ export interface Chamada {
     aceitouTermoComparecimento?: boolean,
 }
 
+export type AppLog = (msg: string, params?: string | Object) => void; 
 export interface VideoSessionType {
     uploadDisabled?: boolean,
     publisherType: 'medico' | 'paciente',
@@ -25,7 +26,7 @@ export interface VideoSessionType {
     onSessionEnded: (codigoSessao: string) => void,
     getTokboxApiKey: () => string,
     currentUserName: string,
-    appLog?: (msg: string, params?: string | Object) => void,
+    appLog?: AppLog,
     onClickVoltar?: (event: any) => void,
     isPictureInPictureEnabled?: boolean,
     onTogglePictureInPicture?: (value: boolean) => void,

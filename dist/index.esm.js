@@ -170,17 +170,46 @@ var removeWhitespaces = function (src, replaceChar) {
 
 var StreamContainer = styled.div(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n  background-color: ", ";\n  height: 100vh;\n  width: 100vw;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n"], ["\n  background-color: ", ";\n  height: 100vh;\n  width: 100vw;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center;\n"])), theme.colors.gray700);
 function StreamMedico(_a) {
-    var nomeSubscriber = _a.nomeSubscriber, onSubscribe = _a.onSubscribe, onSubscribeError = _a.onSubscribeError, onVideoEnabled = _a.onVideoEnabled, onVideoDisabled = _a.onVideoDisabled;
+    var nomeSubscriber = _a.nomeSubscriber, onSubscribe = _a.onSubscribe, onSubscribeError = _a.onSubscribeError, onVideoEnabled = _a.onVideoEnabled, onVideoDisabled = _a.onVideoDisabled, pictureInPictureEnabled = _a.pictureInPictureEnabled, appLog = _a.appLog;
     var subscriberEventHandlers = {
         videoEnabled: function (event) {
+            appLog && appLog('subscriberEvent: videoEnabled', event);
             onVideoEnabled && onVideoEnabled(event);
         },
         videoDisabled: function (event) {
+            appLog && appLog('subscriberEvent: videoDisabled', event);
             onVideoDisabled && onVideoDisabled(event);
+        },
+        audioBlocked: function (event) {
+            appLog && appLog('subscriberEvent: audioBlocked', event);
+        },
+        audioLevelUpdated: function (event) {
+            appLog && appLog('subscriberEvent: audioLevelUpdated', event);
+        },
+        connected: function (event) {
+            appLog && appLog('subscriberEvent: connected', event);
+        },
+        destroyed: function (event) {
+            appLog && appLog('subscriberEvent: destroyed', event);
+        },
+        disconnected: function (event) {
+            appLog && appLog('subscriberEvent: disconnected', event);
+        },
+        videoDimensionsChanged: function (event) {
+            appLog && appLog('subscriberEvent: videoDimensionsChanged', event);
+        },
+        videoDisableWarning: function (event) {
+            appLog && appLog('subscriberEvent: videoDisableWarning', event);
+        },
+        videoDisableWarningLifted: function (event) {
+            appLog && appLog('subscriberEvent: videoDisableWarningLifted', event);
+        },
+        videoElementCreated: function (event) {
+            appLog && appLog('subscriberEvent: videoElementCreated', event);
         },
     };
     var Wrapper = OTSubscriber;
-    return (React.createElement(StreamContainer, { id: "stream-medico" },
+    return (React.createElement(StreamContainer, { id: "stream-medico", hidden: pictureInPictureEnabled },
         React.createElement(OTStreams, null,
             React.createElement(Wrapper, { retry: true, maxRetryAttempts: 3, retryAttemptTimeout: 2000, properties: { width: '100vw', height: '100vh', name: nomeSubscriber }, 
                 // properties={{ width: '100vw', height: '100vh' }}
@@ -218,20 +247,38 @@ var ContainerCameraPaciente = styled.div(templateObject_2$1 || (templateObject_2
 }, theme.breakpoints.md);
 var NoDevice = styled.div(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n  flex: 1;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"], ["\n  flex: 1;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n"])));
 function StreamPaciente(_a) {
-    var nomePublisher = _a.nomePublisher, _b = _a.noDevice, noDevice = _b === void 0 ? false : _b, videoSource = _a.videoSource, sharingScreen = _a.sharingScreen, _c = _a.videoEnabled, videoEnabled = _c === void 0 ? true : _c, onToggleVideo = _a.onToggleVideo, _d = _a.audioEnabled, audioEnabled = _d === void 0 ? true : _d, onToggleAudio = _a.onToggleAudio, onPublish = _a.onPublish, onError = _a.onError, onAccessDenied = _a.onAccessDenied, onStreamCreated = _a.onStreamCreated, onStreamDestroyed = _a.onStreamDestroyed, onMediaStopped = _a.onMediaStopped;
+    var nomePublisher = _a.nomePublisher, _b = _a.noDevice, noDevice = _b === void 0 ? false : _b, videoSource = _a.videoSource, sharingScreen = _a.sharingScreen, _c = _a.videoEnabled, videoEnabled = _c === void 0 ? true : _c, onToggleVideo = _a.onToggleVideo, _d = _a.audioEnabled, audioEnabled = _d === void 0 ? true : _d, onToggleAudio = _a.onToggleAudio, onPublish = _a.onPublish, onError = _a.onError, onAccessDenied = _a.onAccessDenied, onStreamCreated = _a.onStreamCreated, onStreamDestroyed = _a.onStreamDestroyed, onMediaStopped = _a.onMediaStopped, pictureInPictureEnabled = _a.pictureInPictureEnabled, appLog = _a.appLog;
     var publisherEventHandlers = {
         accessDenied: function (event) {
+            appLog && appLog('publisherEvent: accessDenied', event);
             onAccessDenied && onAccessDenied(event);
         },
         streamCreated: function (event) {
+            appLog && appLog('publisherEvent: streamCreated', event);
             onStreamCreated && onStreamCreated(event);
         },
-        streamDestroyed: function (_a) {
-            var reason = _a.reason;
-            onStreamDestroyed && onStreamDestroyed(reason);
+        streamDestroyed: function (event) {
+            appLog && appLog('publisherEvent: streamDestroyed', event);
+            onStreamDestroyed && onStreamDestroyed(event.reason);
         },
-        mediaStopped: function (e) {
-            onMediaStopped && onMediaStopped(e);
+        mediaStopped: function (event) {
+            appLog && appLog('publisherEvent: mediaStopped', event);
+            onMediaStopped && onMediaStopped(event);
+        },
+        accessAllowed: function (event) {
+            appLog && appLog('publisherEvent: accessAllowed', event);
+        },
+        accessDialogClosed: function (event) {
+            appLog && appLog('publisherEvent: accessDialogClosed', event);
+        },
+        accessDialogOpened: function (event) {
+            appLog && appLog('publisherEvent: accessDialogOpened', event);
+        },
+        audioLevelUpdated: function (event) {
+            appLog && appLog('publisherEvent: audioLevelUpdated', event);
+        },
+        videoDimensionsChanged: function (event) {
+            appLog && appLog('publisherEvent: videoDimensionsChanged', event);
         },
     };
     var publisherProperties = useMemo(function () {
@@ -254,7 +301,7 @@ function StreamPaciente(_a) {
                 showControls: false,
             };
     }, [videoEnabled, audioEnabled, videoSource]);
-    return (React.createElement(ContainerStreamPaciente, null,
+    return (React.createElement(ContainerStreamPaciente, { hidden: pictureInPictureEnabled },
         React.createElement(ContainerCameraPaciente, { noDevice: noDevice },
             React.createElement(OTPublisher, { properties: publisherProperties, onPublish: onPublish, onError: onError, eventHandlers: publisherEventHandlers }),
             noDevice && (React.createElement(NoDevice, null,
@@ -712,6 +759,7 @@ var VideoSession = function (_a) {
             }
         },
         onMediaStopped: function (event) {
+            appLog && appLog("<OTPublisher /> onMediaStopped", event);
             var stream = event.target.stream;
             if (stream && stream.videoType === 'screen' && event.cancelable) {
                 event.preventDefault();
@@ -792,8 +840,8 @@ var VideoSession = function (_a) {
             }, onConfirmar: onEndCall, toggleModal: function () { return null; } }, "Deseja realmente finalizar a chamada?"),
         React.createElement(ContainerTelemedicina, null,
             React.createElement(Wrapper, { ref: sessionRef, apiKey: getTokboxApiKey(), sessionId: chamadaEmAndamento.codigoSessao, token: publisherIsPaciente() ? chamadaEmAndamento.tokenPaciente : chamadaEmAndamento.tokenMedico, onError: onError, eventHandlers: sessionEventHandlers },
-                !pictureInPictureEnabled && (React.createElement(StreamMedico, __assign({}, streamMedicoHandlers, { nomeSubscriber: subscriberNameResolver() }))),
-                React.createElement(StreamPaciente, __assign({}, streamPacienteHandlers, { noDevice: noDevice, videoEnabled: videoPacienteEnabled(), onToggleVideo: onToggleVideo, audioEnabled: audioPacienteEnabled(), onToggleAudio: onToggleAudio, sharingScreen: videoSource === videoSources.SCREEN, nomePublisher: getPrimeiroNome(currentUserName, 10), videoSource: videoSource })),
+                React.createElement(StreamMedico, __assign({}, streamMedicoHandlers, { nomeSubscriber: subscriberNameResolver(), pictureInPictureEnabled: pictureInPictureEnabled, appLog: appLog })),
+                React.createElement(StreamPaciente, __assign({}, streamPacienteHandlers, { noDevice: noDevice, videoEnabled: videoPacienteEnabled(), onToggleVideo: onToggleVideo, audioEnabled: audioPacienteEnabled(), onToggleAudio: onToggleAudio, sharingScreen: videoSource === videoSources.SCREEN, nomePublisher: getPrimeiroNome(currentUserName, 10), videoSource: videoSource, pictureInPictureEnabled: pictureInPictureEnabled, appLog: appLog })),
                 !pictureInPictureEnabled && (React.createElement(React.Fragment, null,
                     React.createElement(BarraOpcoes, { chatOpen: chatOpen, onToggleChat: onToggleChat, sharingScreen: videoSource === videoSources.SCREEN, onToggleScreenSharing: onToggleScreenSharing, onEndCall: onMostrarConfirmacaoFinalizacao, disabled: termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento, isPictureInPictureEnabled: isPictureInPictureEnabled, onClickPictureInPicture: pictureInpictureRequest }),
                     React.createElement(Chat, { open: chatOpen, messages: messages, onMessage: onSendMessage, disabled: !medicoConectado || (termoObrigatorio && !chamadaEmAndamento.aceitouTermoComparecimento), onSelectFileUpload: onSelectFileUpload, uploadDisabled: uploadDisabled })))),
