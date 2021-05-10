@@ -327,6 +327,8 @@ const VideoSession = ({ uploadDisabled, onSelectFileUpload, onTogglePictureInPic
       }
     },
     onMediaStopped: (event) => {
+      appLog && appLog(`<OTPublisher /> onMediaStopped`, event);
+
       const { stream } = event.target;
 
       if (stream && stream.videoType === 'screen' && event.cancelable) {
@@ -442,10 +444,12 @@ const VideoSession = ({ uploadDisabled, onSelectFileUpload, onTogglePictureInPic
           eventHandlers={sessionEventHandlers}
         >
 
-          {!pictureInPictureEnabled && (<StreamSubscriber
+          <StreamSubscriber
             {...streamMedicoHandlers}
             nomeSubscriber={subscriberNameResolver()}
-          />)}
+            pictureInPictureEnabled={pictureInPictureEnabled}
+            appLog={appLog}
+          />
 
           <StreamPublisher
             {...streamPacienteHandlers}
@@ -457,6 +461,8 @@ const VideoSession = ({ uploadDisabled, onSelectFileUpload, onTogglePictureInPic
             sharingScreen={videoSource === videoSources.SCREEN}
             nomePublisher={getPrimeiroNome(currentUserName, 10)}
             videoSource={videoSource}
+            pictureInPictureEnabled={pictureInPictureEnabled}
+            appLog={appLog}
           />
           {!pictureInPictureEnabled && (
             <>
